@@ -19,6 +19,7 @@ switch (*current_op)
     case 0x00: printf("NOP"); break;    
  
 } 
+}
 
 int main() {
   
