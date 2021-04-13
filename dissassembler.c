@@ -1,12 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
+
 /**
-    ExtractROM is used to map an opcode to print instructions to
+    extractOPCode is used to map an opcode to print instructions to
     the standard output based on the code currently being read. 
     The base code for this function was designed using the following link.
     http://www.emulator101.com/disassembler-pt-1.html
 **/
 
-int extractOpCode(unsigned char *buffer, int pc)    
+int extractOpCode(unsigned char* buffer, int pc)    
 {    
 unsigned char *current_op = &buffer[pc];   
 // Number of bytes per operation  
@@ -33,7 +35,7 @@ int main(int argc, char** argv) {
     size_t fsize = ftell(fp);
     fseek(fp, 0L, SEEK_SET);
 
-    char* romBuffer = calloc(fsize + 1, sizeof(char));
+    unsigned char* romBuffer = calloc(fsize + 1, sizeof(char));
     fread(romBuffer, fsize, 1, fp);
     fclose(fp);
 
