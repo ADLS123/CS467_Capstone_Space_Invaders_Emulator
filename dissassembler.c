@@ -6,7 +6,7 @@
     http://www.emulator101.com/disassembler-pt-1.html
 **/
 
-int ExtractROM(unsigned char *buffer, int pc)    
+int extractOpCode(unsigned char *buffer, int pc)    
 {    
 unsigned char *current_op = &buffer[pc];   
 // Number of bytes per operation  
@@ -21,8 +21,27 @@ switch (*current_op)
 } 
 }
 
-int main() {
-  
+int main(int argc, char** argv) {
+    FILE* fp = fopen(argv[1], "rb");
+    if (fp == NULL) {
+        fprintf(stderr, "ERROR: could not open file %s\n", argv[1]);
+        exit(1);
+    }
 
-  return 0;
+    // open ROM file and read contents to memory, then close file
+    fseek(fp, 0L, SEEK_END);
+    size_t fsize = ftell(fp);
+    fseek(fp, 0L, SEEK_SET);
+
+    char* romBuffer = calloc(fsize + 1, sizeof(char));
+    fread(romBuffer, fsize, 1, fp);
+    fclose(fp);
+
+    // iterate through entire contents of ROM in memory
+    int pc = 0;
+    while (pc < fsize) {
+        pc += extractOpCode(romBuffer, pc);
+    }
+
+    return 0;
 }
