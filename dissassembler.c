@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 /**
     extractOPCode is used to map an opcode to print instructions to
@@ -188,11 +189,110 @@ int extractOpCode(unsigned char* buffer, int pc){
         case 0xa5: printf("ANA  L"); break;
         case 0xa6: printf("ANA  M"); break;
         case 0xa7: printf("ANA  A"); break;
-        case 0xa8: printf("XRA  B"); break;             //Eclusive-Or operation
+        case 0xa8: printf("XRA  B"); break;             // Exclusive-Or operation
         case 0xa9: printf("XRA  C"); break;
         //final third assigned to Kevin Zhu
+        case 0xaa: printf("XRA  D"); break;
+        case 0xab: printf("XRA  E"); break;
+        case 0xac: printf("XRA  H"); break;
+        case 0xad: printf("XRA  L"); break;
+        case 0xae: printf("XRA  M"); break;
+        case 0xaf: printf("XRA  A"); break;
+        case 0xb0: printf("ORA  B"); break;             // OR operation
+        case 0xb1: printf("ORA  C"); break;
+        case 0xb2: printf("ORA  D"); break;
+        case 0xb3: printf("ORA  E"); break;
+        case 0xb4: printf("ORA  H"); break;
+        case 0xb5: printf("ORA  L"); break;
+        case 0xb6: printf("ORA  M"); break;
+        case 0xb7: printf("ORA  A"); break;
+        case 0xb8: printf("CMP  B"); break;             // Compare operation (subtract A - specified register)
+        case 0xb9: printf("CMP  C"); break;
+        case 0xba: printf("CMP  D"); break;
+        case 0xbb: printf("CMP  E"); break;
+        case 0xbc: printf("CMP  H"); break;
+        case 0xbd: printf("CMP  L"); break;
+        case 0xbe: printf("CMP  M"); break;
+        case 0xbf: printf("CMP  A"); break;
+        case 0xc0: printf("RNZ"); break;                // if NZ (zero flag not set), return
+        case 0xc1: printf("POP  B"); break;
+        case 0xc2: printf("JNZ  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xc3: printf("JMP  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xc4: printf("CNZ  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;      // if NZ, call address
+        case 0xc5: printf("PUSH B"); break;
+        case 0xc6: printf("ADI  #$%02x", current_op[1]), op_size = 2; break;                        // A = A + byte
+        case 0xc7: printf("RST  0"); break;                                                         // CALL $0
+        case 0xc8: printf("RZ"); break;                                                             // if Z (zero flag set), return
+        case 0xc9: printf("RET"); break;
+        case 0xca: printf("JZ   $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;      // if Z jump
+        case 0xcb: printf("-"); break;
+        case 0xcc: printf("CZ   $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;      // if Z, call address
+        case 0xcd: printf("CALL $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xce: printf("ACI  #$%02x", current_op[1]); op_size = 2; break;                        // ADI but with carry
+        case 0xcf: printf("RST  1"); break;                                                         // CALL $8
+        case 0xd0: printf("RNC"); break;                                                            // if NCY, return
+        case 0xd1: printf("POP  D"); break;
+        case 0xd2: printf("JNC  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xd3: printf("OUT"); op_size = 2;  break;
+        case 0xd4: printf("CNC  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xd5: printf("PUSH D"); break;
+        case 0xd6: printf("SUI"); op_size = 2; break;
+        case 0xd7: printf("RST  2"); break;                                                         // CALL $10
+        case 0xd8: printf("RC"); break;
+        case 0xd9: printf("-"); break;
+        case 0xda: printf("JC   $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;      
+        case 0xdb: printf("IN"); op_size = 2; break;
+        case 0xdc: printf("CC   $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xdd: printf("-"); break;
+        case 0xde: printf("SBI"); op_size = 2; break;                                               // A <- A - data - carry
+        case 0xdf: printf("RST  3"); break;                                                         // CALL $18
+        case 0xe0: printf("RPO"); break;                                                            // PO = parity odd
+        case 0xe1: printf("POP  H"); break;
+        case 0xe2: printf("JPO  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xe3: printf("XTHL"); break;                                                           // EXCHANGE: L with SP, and H with SP+1
+        case 0xe4: printf("CPO  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xe5: printf("PUSH H"); break;
+        case 0xe6: printf("ANI"); op_size = 2; break;                                               // A <- A AND data
+        case 0xe7: printf("RST  4"); break;                                                         // CALL $20
+        case 0xe8: printf("RPE"); break;                                                            // PE = parity even
+        case 0xe9: printf("PCHL"); break;
+        case 0xea: printf("JPE  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xeb: printf("XCHG"); break;                                                           // EXCHANGE: H with D, L with E
+        case 0xec: printf("CPE  $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xed: printf("-"); break;
+        case 0xee: printf("XRI"); op_size = 2; break;                                               // A <- A XOR data
+        case 0xef: printf("RST  5"); break;                                                         // CALL $28
+        case 0xf0: printf("RP"); break; 
+        case 0xf1: printf("POP  PSW"); break;
+        case 0xf2: printf("JP   $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xf3: printf("DI"); break;
+        case 0xf4: printf("CP   $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xf5: printf("PUSH PSW"); break;
+        case 0xf6: printf("ORI"); op_size = 2; break;
+        case 0xf7: printf("RST 6"); break;                                                          // CALL $30
+        case 0xf8: printf("RM"); break; 
+        case 0xf9: printf("SPHL"); break;                                                           // load SP with 16bit from HL
+        case 0xfa: printf("JM   $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xfb: printf("EI"); break;
+        case 0xfc: printf("CM   $%02x%02x", current_op[2], current_op[1]); op_size = 3; break;
+        case 0xfd: printf("-"); break;
+        case 0xfe: printf("CPI"); op_size = 2; break;                                               // COPY A <- data
+        case 0xff: printf("RST  7"); break;                                                         // CALL $38
     } 
+
+    printf("\n");
+    return op_size;
 }
+
+/* Converts 2 byte little endian unsigned char representation to an integer.
+Used for getting addresses from opcode arguments.*/
+uint16_t convertFromLE(unsigned char* bytes) {
+    // still needs additional testing, should be stored as LE, but may print out as if BE
+    uint16_t result = (uint16_t)bytes[0] << 8 |
+                      (uint16_t)bytes[1];
+    return result;
+}
+
 
 int main(int argc, char** argv) {
     FILE* fp = fopen(argv[1], "rb");
