@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 /**
     extractOPCode is used to map an opcode to print instructions to
@@ -108,8 +109,83 @@ int extractOpCode(unsigned char* buffer, int pc){
         case 0xa8: printf("XRA  B"); break;             //Eclusive-Or operation
         case 0xa9: printf("XRA  C"); break;
         //final third assigned to Kevin Zhu
+        case 0xaa: printf("XRA  D"); break;
+        case 0xab: printf("XRA  H"); break;
+        case 0xac: printf("XRA  D"); break;
+        case 0xad: printf("XRA  L"); break;
+        case 0xae: printf("XRA  M"); break;
+        case 0xaf: printf("XRA  A"); break;
+        case 0xb0: printf("ORA  B"); break;
+        case 0xb1: printf("ORA  C"); break;
+        case 0xb2: printf("ORA  D"); break;
+        case 0xb3: printf("ORA  E"); break;
+        case 0xb4: printf("ORA  H"); break;
+        case 0xb5: printf("ORA  L"); break;
+        case 0xb6: printf("ORA  M"); break;
+        case 0xb7: printf("ORA  A"); break;
+        case 0xb8: printf("CMP  B"); break;
+        case 0xb9: printf("CMP  C"); break;
+        case 0xba: printf("CMP  D"); break;
+        case 0xbb: printf("CMP  E"); break;
+        case 0xbc: printf("CMP  H"); break;
+        case 0xbd: printf("CMP  L"); break;
+        case 0xbe: printf("CMP  M"); break;
+        case 0xbf: printf("CMP  A"); break;
+        case 0xc0: printf("RNZ"); break;
+        case 0xc1: printf("POP  B"); break;
+        case 0xc2: 
+            int 
+            printf("JNZ  #$%04x", code[]); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+        case 0x: printf(""); break;
+
     } 
 }
+
+/* Converts 2 byte little endian unsigned char representation to an integer.
+Used for getting addresses from opcode arguments.*/
+uint16_t convertFromLE(unsigned char* bytes) {
+    uint16_t result = (uint16_t)bytes[0] << 8 |
+                      (uint16_t)bytes[1];
+    return result;
+}
+
 
 int main(int argc, char** argv) {
     FILE* fp = fopen(argv[1], "rb");
