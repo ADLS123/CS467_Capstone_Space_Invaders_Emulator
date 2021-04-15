@@ -110,8 +110,8 @@ int extractOpCode(unsigned char* buffer, int pc){
         case 0xa9: printf("XRA  C"); break;
         //final third assigned to Kevin Zhu
         case 0xaa: printf("XRA  D"); break;
-        case 0xab: printf("XRA  H"); break;
-        case 0xac: printf("XRA  D"); break;
+        case 0xab: printf("XRA  E"); break;
+        case 0xac: printf("XRA  H"); break;
         case 0xad: printf("XRA  L"); break;
         case 0xae: printf("XRA  M"); break;
         case 0xaf: printf("XRA  A"); break;
@@ -204,6 +204,7 @@ int extractOpCode(unsigned char* buffer, int pc){
 /* Converts 2 byte little endian unsigned char representation to an integer.
 Used for getting addresses from opcode arguments.*/
 uint16_t convertFromLE(unsigned char* bytes) {
+    // still needs additional testing, should be stored as LE, but may print out as if BE
     uint16_t result = (uint16_t)bytes[0] << 8 |
                       (uint16_t)bytes[1];
     return result;
