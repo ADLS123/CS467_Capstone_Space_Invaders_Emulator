@@ -40,7 +40,6 @@ void unimplementedInstruction(State8080* state) {
 /* Contains code for emulating opcodes */
 void emulate8080(State8080* state) {
 	unsigned char* opCode = &state->memory[state->pc];
-	state->pc += 1;
 
 	switch (*opCode) {
 		// insert opcode stuff here
