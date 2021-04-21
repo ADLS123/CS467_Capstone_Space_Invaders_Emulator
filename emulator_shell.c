@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+/* Prototypes */
+typedef struct ConditionCodes;
+typedef struct State8080;
+void callFunc(State8080*, uint16_t);
+void retFunc(State8080*);
+void unimplementedInstruction(State8080*);
+void emulate8080(State8080*);
+
+
 /* Simulates condition codes/flags of 8080 processor */
 typedef struct ConditionCodes {
 	uint8_t	z : 1;
