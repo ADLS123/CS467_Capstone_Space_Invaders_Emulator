@@ -33,14 +33,25 @@ typedef struct State8080 {
 
 
 /* Helper function for CALL instruction */
-void callFunc(State8080* state) {
+void callFunc(State8080* state, uint16_t callAddr) {
+	// set return address based on how long the instruction is
+	uint16_t pcIncr = 0;
+	if (callAddr = UINT16_MAX)
+		pcIncr = 2
 	// push return address on stack (actually return address - 1, bc of pc increment after switch cases)
-	uint16_t retAddr = state->pc + 2;
-	state->memory[sp - 1] = (retAddr >> 8) & 0xFF;
-	state->memory[sp - 2] = retAddr & 0xFF;
+	uint16_t retAddr = state->pc + pcIncr;
+	state->memory[sp - 1] = (retAddr >> 8) & 0xff;
+	state->memory[sp - 2] = retAddr & 0xff;
 
-	unsigned char* opCode = &state->memory[state->pc];
-	state->pc = (opCode[2] << 8 | opCode[1]);
+	// if no address is specified, UINT16_MAX used for no specific address
+	if (callAddr == UINT16_MAX) { 
+		unsigned char* opCode = &state->memory[state->pc];
+		state->pc = (opCode[2] << 8 | opCode[1]);
+	}
+	// if address is specified
+	else {
+		state->pc = callAddr;
+	}
 }
 
 
@@ -119,16 +130,98 @@ void emulate8080(State8080* state) {
 
 		/* CALL and RET instructions */
 		case 0xc4: // CNZ
-			if (state->cc.z == 0) {
-				callFunc(state);
-				break;
-			}
+			if (state->cc.z == 0)
+				callFunc(state, UINT16_MAX);
 			else
 				state->pc += 2;
 			break;
 
-				
-				
+		case 0xc7: // RST 0
+			callFunc(state, 0x00);
+			break;
+
+		case 0xcc: // CZ
+			if (state->cc.z == 1)
+				callFunc(state, UINT16_MAX);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xcd: // CALL
+			callFunc(state, UINT16_MAX);
+			break;
+
+		case 0xcf: // RST 1
+			callFunc(state, 0x08);
+			break;
+
+		case 0xd4: // CNC
+			if (state->cc.cy == 0)
+				callFunc(state, UINT16_MAX);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xd7: // RST 2
+			callFunc(state, 0x10);
+			break;
+
+		case 0xdc: // CC
+			if (state->cc.cy == 1)
+				callFunc(state, UINT16_MAX);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xdf: // RST 3
+			callFunc(state, 0x18);
+			break;
+
+		case 0xe4: // CPO
+			if (state->cc.p == 0)
+				callFunc(state, UINT16_MAX);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xe7: // RST 4
+			callFunc(state, 0x20);
+			break;
+
+		case 0xec: // CPE
+			if (state->cc.p == 1)
+				callFunc(state, UINT16_MAX);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xef: // RST 5
+			callFunc(state, 0x28);
+			break;
+
+		case 0xf4: // CP
+			if (state->cc.s == 0)
+				callFunc(state, UINT16_MAX);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xf7: // RST 6
+			callFunc(state, 0x30);
+			break;
+
+		case 0xfc: // CM
+			if (state->cc.s == 1)
+				callFunc(state, UINT16_MAX);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xff: // RST 7
+			callFunc(state, 0x38);
+			break;
+
+			
 	}
 
 	state->pc += 1;
