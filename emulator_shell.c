@@ -42,7 +42,69 @@ void emulate8080(State8080* state) {
 	unsigned char* opCode = &state->memory[state->pc];
 
 	switch (*opCode) {
-		// insert opcode stuff here
+	
+		/* JUMP instructions */
+		case 0xc2: // JNZ
+			if (state->cc.z == 0)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xc3: // JMP
+			state->pc = (opCode[2] << 8 | opCode[1]);
+			break;
+
+		case 0xca: // JZ
+			if (state->cc.z == 1)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else 
+				state->pc += 2;
+			break;
+
+		case 0xd2: // JNC
+			if (state->cc.cy == 0)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xda: // JC
+			if (state->cc.cy == 1)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xe2: // JPO
+			if (state->cc.p == 0)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xea: // JPE
+			if (state->cc.p == 1)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xf2: // JP (plus sign)
+			if (state->cc.s == 0)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
+			break;
+
+		case 0xfa: // JM (minus sign)
+			if (state->cc.s == 1)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
+			break;
+
+
 	}
 
 	state->pc += 1;
