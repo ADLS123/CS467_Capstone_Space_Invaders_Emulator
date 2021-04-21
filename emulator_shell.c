@@ -31,6 +31,19 @@ typedef struct State8080 {
 
 } State8080;
 
+
+/* Helper function for CALL instruction */
+void callFunc(State8080* state) {
+	// push return address on stack (actually return address - 1, bc of pc increment after switch cases)
+	uint16_t retAddr = state->pc + 2;
+	state->memory[sp - 1] = (retAddr >> 8) & 0xFF;
+	state->memory[sp - 2] = retAddr & 0xFF;
+
+	unsigned char* opCode = &state->memory[state->pc];
+	state->pc = (opCode[2] << 8 | opCode[1]);
+}
+
+
 /* Prints error message if unexpected instruction is encountered */
 void unimplementedInstruction(State8080* state) {
 	fprintf(stderr, "ERROR: Unimplemented instruction at $%x\n", &state->memory[state->pc]);
@@ -104,7 +117,18 @@ void emulate8080(State8080* state) {
 				state->pc += 2;
 			break;
 
+		/* CALL and RET instructions */
+		case 0xc4: // CNZ
+			if (state->cc.z == 0) {
+				callFunc(state);
+				break;
+			}
+			else
+				state->pc += 2;
+			break;
 
+				
+				
 	}
 
 	state->pc += 1;
