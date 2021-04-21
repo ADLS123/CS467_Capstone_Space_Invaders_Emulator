@@ -32,7 +32,7 @@ typedef struct State8080 {
 } State8080;
 
 
-/* Helper function for CALL instruction */
+/* Helper function for CALL instructions */
 void callFunc(State8080* state, uint16_t callAddr) {
 	// set return address based on how long the instruction is
 	uint16_t pcIncr = 0;
@@ -53,6 +53,15 @@ void callFunc(State8080* state, uint16_t callAddr) {
 		state->pc = callAddr;
 	}
 }
+
+
+/* Helper function for RET instructions */
+void retFunc(State8080* state) {
+	uint16_t retAddr = (state->memory[state->sp + 1] << 8) | state->memory[state->sp];
+	state->pc = retAddr;
+	state->sp += 2;
+}
+
 
 
 /* Prints error message if unexpected instruction is encountered */
@@ -221,7 +230,50 @@ void emulate8080(State8080* state) {
 			callFunc(state, 0x38);
 			break;
 
+		/* RET instructions*/
+		case 0xc0: // RNZ
+			if (state->cc.z == 0)
+				retFunc(state);
+			break;
 			
+		case 0xc8: // RZ
+			if (state->cc.z == 1)
+				retFunc(state);
+			break;
+
+		case 0xc9: // RET
+			retFunc(state);
+			break;
+
+		case 0xd0: // RNC
+			if (state->cc.cy == 0)
+				retFunc(state);
+			break;
+
+		case 0xd8: // RC
+			if (state->cc.cy == 1)
+				retFunc(state);
+			break;
+
+		case 0xe0: // RPO
+			if (state->cc.p == 0)
+				retFunc(state);
+			break;
+
+		case 0xe8: // RPE 
+			if (state->cc.p == 1)
+				retFunc(state);
+			break;
+
+		case 0xf0: // RP
+			if (state->cc.s == 0)
+				retFunc(state);
+			break;
+
+		case 0xf8: // RM
+			if (state->cc.s == 1)
+				retFunc(state);
+			break;
 	}
 
 	state->pc += 1;
