@@ -12,5 +12,6 @@
 int parity(int value);		//checks parity of argument value
 int setCarry(int value);
 int setDoubleCarry(int value);
+int logicSetSign(int value);
 int zero(int value);		//function for setting the zero flag
 #endif

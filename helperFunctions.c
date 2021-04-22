@@ -42,6 +42,10 @@ int parity(int value){
 * NOTE: The below functions are inspired from the logic from URL: http://emulator101.com/
 */
 
+
+int logicSetSign(int value) {
+	return (0x80 == (value & 0x80));
+}
 /**************************************************************************************************
 ** Function Name: int setCarry
 ** Parameters: an integer to check for setting the carry flag

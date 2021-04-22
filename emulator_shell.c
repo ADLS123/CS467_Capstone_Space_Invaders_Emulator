@@ -2,11 +2,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "helperFunctions.h"
+
 /* Prototypes */
 typedef struct ConditionCodes;
 typedef struct State8080;
 void callFunc(State8080*, uint16_t);
 void retFunc(State8080*);
+void setLogicFlagsA(State8080* state);
 void unimplementedInstruction(State8080*);
 void emulate8080(State8080*);
 
@@ -46,11 +49,11 @@ void callFunc(State8080* state, uint16_t callAddr) {
 	// set return address based on how long the instruction is
 	uint16_t pcIncr = 0;
 	if (callAddr = UINT16_MAX)
-		pcIncr = 2
+		pcIncr = 2;
 	// push return address on stack (actually return address - 1, bc of pc increment after switch cases)
 	uint16_t retAddr = state->pc + pcIncr;
-	state->memory[sp - 1] = (retAddr >> 8) & 0xff;
-	state->memory[sp - 2] = retAddr & 0xff;
+	state->memory[state->sp - 1] = (retAddr >> 8) & 0xff;
+	state->memory[state->sp - 2] = retAddr & 0xff;
 
 	// if no address is specified, UINT16_MAX used for no specific address
 	if (callAddr == UINT16_MAX) { 
@@ -72,7 +75,17 @@ void retFunc(State8080* state) {
 }
 
 
+/*
+* NOTE: Function for setting the state comes from https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+*/
 
+void setLogicFlagsA(State8080* state) {
+	state->cc.cy = 0;
+	state->cc.ac = 0;
+	state->cc.z = zero(state->a);
+	state->cc.s = logicSetSign(state->a);
+	state->cc.p = parity(state->a);
+}
 /* Prints error message if unexpected instruction is encountered */
 void unimplementedInstruction(State8080* state) {
 	fprintf(stderr, "ERROR: Unimplemented instruction at $%x\n", &state->memory[state->pc]);
@@ -84,7 +97,279 @@ void emulate8080(State8080* state) {
 	unsigned char* opCode = &state->memory[state->pc];
 
 	switch (*opCode) {
-	
+
+		/* ANA instructions */
+		case 0xa0: // ANA B
+			state->a = state->a & state->b;
+			setLogicFlagsA(state);
+			break;
+		case 0xa1: // ANA C
+			state->a = state->a & state->c;
+			setLogicFlagsA(state);
+			break;
+		case 0xa2: // ANA D
+			state->a = state->a & state->d;
+			setLogicFlagsA(state);
+			break;
+		case 0xa3: // ANA E 
+			state->a = state->a & state->e;
+			setLogicFlagsA(state);
+			break;
+		case 0xa4: // ANA H
+			state->a = state->a & state->h;
+			setLogicFlagsA(state);
+			break;
+		case 0xa5: // ANA L
+			state->a = state->a & state->l;
+			setLogicFlagsA(state);
+			break;
+		case 0xa6: // ANA M
+			{	//how to handle the hl register came from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+				uint32_t hl = (state->h << 8) | state->l;
+				state->a = state->a & hl;
+				setLogicFlagsA(state);
+			}
+			break;
+		case 0xa7: // ANA A
+			state->a = state->a & state->a;
+			setLogicFlagsA(state);
+			break;
+		/* XRA instructions */
+		case 0xa8: // XRA B
+			state->a = state->a ^ state->b;
+			setLogicFlagsA(state);
+			break;
+		case 0xa9: // XRA C
+			state->a = state->a ^ state->c;
+			setLogicFlagsA(state);
+			break;
+		case 0xaa: // XRA D
+			state->a = state->a ^ state->d;
+			setLogicFlagsA(state);
+			break;
+		case 0xab: // XRA E
+			state->a = state->a ^ state->e;
+			setLogicFlagsA(state);
+			break;
+		case 0xac: // XRA H
+			state->a = state->a ^ state->h;
+			setLogicFlagsA(state);
+			break;
+		case 0xad: // XRA L
+			state->a = state->a ^ state->l;
+			setLogicFlagsA(state);
+			break;
+		case 0xae: // XRA M
+		{	//how to handle the hl register came from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint32_t hl = (state->h << 8) | state->l;
+			state->a = state->a ^ hl;
+			setLogicFlagsA(state);
+		}
+			break;
+		case 0xaf: // XRA A
+			state->a = state->a ^ state->a;
+			setLogicFlagsA(state);
+			break;
+		/* ORA instructions*/
+		case 0xb0: // ORA B
+			state->a = state->a | state ->b;
+			setLogicFlagsA(state);
+			break;
+		case 0xb1: // ORA C
+			state->a = state->a | state->c;
+			setLogicFlagsA(state);
+			break;
+		case 0xb2: // ORA D
+			state->a = state->a | state->d;
+			setLogicFlagsA(state);
+			break;
+		case 0xb3: // ORA E
+			state->a = state->a | state->e;
+			setLogicFlagsA(state);
+			break;
+		case 0xb4: // ORA H
+			state->a = state->a | state->h;
+			setLogicFlagsA(state);
+			break;
+		case 0xb5: // ORA L
+			state->a = state->a | state->l;
+			setLogicFlagsA(state);
+			break;
+		case 0xb6: // ORA M
+		{
+			uint32_t hl = (state->h << 8) | state->l;
+			state->a = state->a | hl;
+			setLogicFlagsA(state);
+		}
+			break;
+		case 0xb7: // ORA A
+			state->a = state->a | state->a;
+			setLogicFlagsA(state);
+			break;
+		/* CMP instructions */
+		case 0xb8: // CMP B
+		{
+			uint8_t value = state->a - state->b;
+			state->cc.z = zero(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < state->b);
+		}
+			break;
+		case 0xb9: // CMP C
+		{
+			uint8_t value = state->a - state->c;
+			state->cc.z = zero(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < state->c);
+		}
+			break;
+		case 0xba: // CMP D
+		{
+			uint8_t value = state->a - state->d;
+			state->cc.z = zero(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < state->d);
+		}
+			break;
+		case 0xbb: // CMP E
+		{
+			uint8_t value = state->a - state->e;
+			state->cc.z = zero(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < state->e);
+		}
+			break;
+		case 0xbc: // CMP H
+		{
+			uint8_t value = state->a - state->h;
+			state->cc.z = zero(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < state->h);
+		}
+			break;
+		case 0xbd: // CMP L
+		{
+			uint8_t value = state->a - state->l;
+			state->cc.z = zero(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < state->l);
+		}
+			break;
+		case 0xbe: // CMP M
+		{
+			uint32_t hl = (state->h << 8) | state->l;
+			uint8_t value = state->a - hl;
+			state->cc.z = zero(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < hl);
+		}
+			break;
+		case 0xbf: // CMP A
+		{
+			uint8_t value = state->a - state->a;
+			state->cc.z = zero(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < state->a);
+		}
+			break;
+		/* RLC instructions */
+		/* Code comes from swapping directions of RRC code from http://emulator101.com/ */
+		case 0x07: // RLC
+		{
+			uint8_t value = state->a;
+			state->a = ((value & 1) >> 7) | (value << 1);
+			state->cc.cy = (1 == (value & 1));
+		}
+			break;
+		/* RRC instructions */
+		/* Code comes from the Emulator Logic Branch page: http://emulator101.com/ */
+		case 0x0f: // RRC 
+		{
+			uint8_t value = state->a;
+			state->a = ((value & 1) << 7) | (value >> 1);
+			state->cc.cy = (1 == (value & 1));
+		}
+			break;
+		/* RAL instructions */
+		/* Code comes from swapping directions of RAR code from http://emulator101.com/ */
+		case 0x17: // RAL
+		{
+			uint8_t value = state->a;
+			state->a = (state->cc.cy >> 7) | (value << 1);
+			state->cc.cy = (1 == (value & 1));
+		}
+			break;
+		/* RAR instructions */
+		/* Code comes from the Emulator Logic Branch page: http://emulator101.com/ */
+		case 0x1f: // RAR
+		{
+			uint8_t value = state->a;
+			state->a = (state->cc.cy << 7) | (value >> 1);
+			state->cc.cy = (1 == (value & 1));
+		}
+			break;
+		/* ANI instruction */
+		/* Code comes from the Emulator Logic Branch page: http://emulator101.com/ */
+		case 0xe6: // ANI byte
+		{
+			uint8_t value = state->a & opCode[1];
+			state->cc.z = zero(value);
+			state->cc.s = logicSetSign(value);
+			state->cc.p = parity(value);
+			state->cc.cy = 0;
+			state->a = value;
+			state->pc++;
+		}
+			break;
+		/* CMA instructions */
+		/* Code comes from the Emulator Logic Branch page: http://emulator101.com/ */
+		case 0x2f: // CMA
+			state->a = ~state->a;
+			break;
+		/* XRI instructions */
+		case 0xee: // XRI byte
+		{
+			uint8_t value = state->a ^ opCode[1];
+			state->cc.z = zero(value);
+			state->cc.s = logicSetSign(value);
+			state->cc.p = parity(value);
+			state->cc.cy = 0;
+			state->a = value;
+			state->pc++;
+		}
+			break;
+		/* ORI instructions */
+		case 0xf6: // ORI byte
+		{
+			uint8_t value = state->a | opCode[1];
+			state->cc.z = zero(value);
+			state->cc.s = logicSetSign(value);
+			state->cc.p = parity(value);
+			state->cc.cy = 0;
+			state->a = value;
+			state->pc++;
+		}
+			break;
+		/* CPI instructions */
+		/* Code comes from the Emulator Logic Branch page: http://emulator101.com/ */
+		case 0xfe: // CPI byte
+		{
+			uint8_t value = state->a - opCode[1];
+			state->cc.z = zero(value);
+			state->cc.s = logicSetSign(value);
+			state->cc.p = parity(value);
+			state->cc.cy = (state->a < opCode[1]);
+			state->pc++;
+		}
+			break;
+		/* CMC instructions*/
+		case 0x3f: // CMC
+			state->cc.cy = ~state->cc.cy;
+			break;
+		/* STC instruction */
+		case 0x37: // STC
+			state->cc.cy = 1;
+			break;
 		/* JUMP instructions */
 		case 0xc2: // JNZ
 			if (state->cc.z == 0)
