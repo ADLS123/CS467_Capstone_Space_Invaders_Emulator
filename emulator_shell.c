@@ -277,7 +277,7 @@ void emulate8080(State8080* state) {
 		case 0x07: // RLC
 		{
 			uint8_t value = state->a;
-			state->a = ((value & 1) >> 7) | (value << 1);
+			state->a = (value >> 7) | (value << 1);
 			state->cc.cy = (1 == (value & 1));
 		}
 			break;
@@ -295,7 +295,7 @@ void emulate8080(State8080* state) {
 		case 0x17: // RAL
 		{
 			uint8_t value = state->a;
-			state->a = (state->cc.cy >> 7) | (value << 1);
+			state->a = (state->cc.cy) | (value << 1);
 			state->cc.cy = (1 == (value & 1));
 		}
 			break;
