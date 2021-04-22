@@ -1,3 +1,10 @@
+/**************************************************************************************************
+** File Name: helperFunctions.c
+** Author(s): Devin Swanson
+** Description: This file contains the function definitions to encapsulate the work related to 
+		the various flag setting required for the Space Invaders ROM
+**************************************************************************************************/
+
 #include <stdio.h>
 
 #include "helperFunctions.h"
@@ -31,19 +38,57 @@ int parity(int value){
 }
 
 
-
 /*
+* NOTE: The below functions are inspired from the logic from URL: http://emulator101.com/
+*/
+
+/**************************************************************************************************
+** Function Name: int setCarry
+** Parameters: an integer to check for setting the carry flag
+** Returns: Either a 1 or 0 depending on the truth value of the statement
+** Description: This function is used to set the carry flag for the instructions for the emulator
+**************************************************************************************************/
+int setCarry(int value){
+	return (value > 0xff);
+}
+
+
+/**************************************************************************************************
+** Function Name: int setDoubleCarry(int value)
+** Parameters: an integer value
+** Returns: Either zero or one, one if the statement is true, zero if false
+** Description: This function is to be used for double instructions to set the carry flag for
+		the emulator. This is used for the double instructions
+**************************************************************************************************/
+int setDoubleCarry(int value) {
+	return ((value & 0xffff0000) != 0);
+}
+
+
+
+//function for setting the zero flag based off of a parameter value
+int zero(int value) {
+	return (value == 0);
+}
+
+
+
 //Testing main for whatever helper function is needed
 int main() {
-	int n = 9;
+	int n = 23;
 	int result = parity(n);
 	if (result == 1) {
-		printf("Even parity\n");
+		printf("My parity: Even parity\n");
 	}
 	else {
-		printf("Odd parity\n");
+		printf("My Parity: Odd parity\n");
 	}
-
+	
+	//testing zero flag
+	int math = 8 - 7;
+	if (zero(math & 0xff)) {
+		printf("Zero flag activated, value: %d\n", zero(math));
+	}
+	else { printf("not zero"); }
 	return 0;
 }
-*/
