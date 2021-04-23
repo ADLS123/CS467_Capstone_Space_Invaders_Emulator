@@ -370,6 +370,392 @@ void emulate8080(State8080* state) {
 		case 0x37: // STC
 			state->cc.cy = 1;
 			break;
+		/* MOV instructions */
+		case 0x40: // MOV B, B
+			state->b = state->b;
+			break;
+		case 0x41: // MOV B, C
+			state->b = state->c;
+			break;
+		case 0x42: // MOV B, D
+			state->b = state->d;
+			break;
+		case 0x43: // MOV B, E
+			state->b = state->e;
+			break;
+		case 0x44: // MOV B, H
+			state->b = state->h;
+			break;
+		case 0x45: // MOV B, L
+			state->b = state->l;
+			break;
+		case 0x46: // MOV B, M
+		{	// code for Moving M to from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->b = state->memory[offset];
+		}
+			break;
+		case 0x47: // MOV B, A
+			state->b = state->a;
+			break;
+		case 0x48:  // MOV C, B
+			state->c = state->b;
+			break;
+		case 0x49: // MOV C, C
+			state->c = state->c;
+			break;
+		case 0x4a: // MOV C, D
+			state->c = state->d;
+			break;
+		case 0x4b: // MOV C, E
+			state->c = state->e;
+			break;
+		case 0x4c: // MOV C, H
+			state->c = state->h;
+			break;
+		case 0x4d: // MOV C, L
+			state->c = state->l;
+			break;
+		case 0x4e: // MOV C, M
+		{	// code for Moving M to from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->c = state->memory[offset];
+		}
+			break;
+		case 0x4f: // MOV C, A
+			state->c = state->a;
+			break;
+		case 0x50: // MOV D, B
+			state->d = state->b;
+			break;
+		case 0x51: // MOV D, C
+			state->d = state->c;
+			break;
+		case 0x52: // MOV D, D
+			state->d = state->d;
+			break;
+		case 0x53: // MOV D, E
+			state->d = state->e;
+			break;
+		case 0x54: // MOV D, H
+			state->d = state->h;
+			break;
+		case 0x55: // MOV D, L
+			state->d = state->l;
+			break;
+		case 0x56: // MOV D, M
+		{	// code for Moving M to from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->d = state->memory[offset];
+		}
+			break;
+		case 0x57: // MOV D, A
+			state->d = state->a;
+			break;
+		case 0x58: // MOV E, B
+			state->e = state->b;
+			break;
+		case 0x59: // MOV E, C
+			state->e = state->c;
+			break;
+		case 0x5a: // MOV E, D
+			state->e = state->d;
+			break;
+		case 0x5b: // MOV E, E
+			state->e = state->e;
+			break;
+		case 0x5c: // MOV E, H
+			state->e = state->h;
+			break;
+		case 0x5d: // MOV E, L
+			state->e = state->l;
+			break;
+		case 0x5e: // MOV E, M
+		{	// code for Moving M to from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->e = state->memory[offset];
+		}
+			break;
+		case 0x5f: // MOV E, A
+			state->e = state->a;
+			break;
+		case 0x60: // MOV H, B
+			state->h = state->b;
+			break;
+		case 0x61: // MOV H, C
+			state->h = state->c;
+			break;
+		case 0x62: // MOV H, D
+			state->h = state->d;
+			break;
+		case 0x63: // MOV H, E
+			state->h = state->e;
+			break;
+		case 0x64: // MOV H, H
+			state->h = state->h;
+			break;
+		case 0x65: // MOV H, L
+			state->h = state->l;
+			break;
+		case 0x66: // MOV H, M
+		{	// code for Moving M to from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->h = state->memory[offset];
+		}
+			break;
+		case 0x67: // MOV H, A
+			state->h = state->a;
+			break;
+		case 0x68: // MOV L, B
+			state->l = state->b;
+			break;
+		case 0x69: // MOV L, C
+			state->l = state->c;
+			break;
+		case 0x6a: // MOV L, D
+			state->l = state->d;
+			break;
+		case 0x6b: // MOV L, E
+			state->l = state->e;
+			break;
+		case 0x6c: // MOV L, H
+			state->l = state->h;
+			break;
+		case 0x6d: // MOV L, L
+			state->l = state->l;
+			break;
+		case 0x6e: // MOV L, M
+		{	// code for Moving M to from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->l = state->memory[offset];
+		}
+			break;
+		case 0x6f: // MOV L, A
+			state->l = state->a;
+			break;
+		/*
+		* MOV M, x comes  from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+		*/
+		case 0x70: // MOV M, B
+		{	
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->memory[offset] = state->b;
+		}
+			break;
+		case 0x71: // MOV M, C
+		{
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->memory[offset] = state->c;
+		}
+			break;
+		case 0x72: // MOV M, D
+		{
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->memory[offset] = state->d;
+		}
+			break;
+		case 0x73: // MOV M, E
+		{
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->memory[offset] = state->e;
+		}
+			break;
+		case 0x74: // MOV M, H
+		{
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->memory[offset] = state->h;
+		}
+			break;
+		case 0x75: // MOV M, L
+		{
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->memory[offset] = state->l;
+		}
+			break;
+		case 0x77: // MOV M, A
+		{
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->memory[offset] = state->a;
+		}
+			break;
+		case 0x78: // MOV A, B
+			state->a = state->b;
+			break;
+		case 0x79: // MOV A, C
+			state->a = state->c;
+			break;
+		case 0x7a: // MOV A, D
+			state->a = state->d;
+			break;
+		case 0x7b: // MOV A, E
+			state->a = state->e;
+			break;
+		case 0x7c: // MOV A, H
+			state->a = state->h;
+			break;
+		case 0x7d: // MOV A, L
+			state->a = state->l;
+			break;
+		case 0x7e: // MOV A, M
+		{	// code for Moving M to from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint16_t offset = (state->h << 8) | (state->l);
+			state->a = state->memory[offset];
+		}
+			break;
+		case 0x7f: // MOV A, A
+			state->a = state->a;
+			break;
+		/* MVI Instructions */
+		case 0x06: // MVI B, D8
+			state->b = opCode[1];
+			state->pc++;
+			break;
+		case 0x0e: // MVI C, D8
+			state->c = opCode[1];
+			state->pc++;
+			break;
+		case 0x16: // MVI D, D8
+			state->d = opCode[1];
+			state->pc++;
+			break;
+		case 0x1e: // MVI E, D8
+			state->e = opCode[1];
+			state->pc++;
+			break;
+		case 0x26: // MVI H, D8
+			state->h = opCode[1];
+			state->pc++;
+			break;
+		case 0x2e: // MVI L, D8
+			state->l = opCode[1];
+			state->pc++;
+			break;
+		case 0x36: // MVI M, D8
+		{ //from URL : https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			uint16_t offset = (state->h << 8) | state->l;
+			state->memory[offset] = opCode[1];
+			state->pc++;
+		}
+			break;
+		case 0x3e: // MVI A, D8
+			state->a = opCode[1];
+			state->pc++;
+			break;
+		/* LXI instructions */
+		// from URL : https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+		case 0x01: // LXI B, D16
+			state->c = opCode[1];
+			state->b = opCode[2];
+			state->pc += 2;
+			break;
+		case 0x11: // LXI D, D16
+			state->e = opCode[1];
+			state->d = opCode[2];
+			state->pc += 2;
+			break;
+		case 0x21: // LXI H, D16
+			state->l = opCode[1];
+			state->h = opCode[2];
+			break;
+		case 0x31: // LXI SP, D16
+			//from URL : https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+			state->sp = (opCode[2] << 8) | opCode[1];
+			state->pc += 2;
+			break;
+		/* LDAX instructions */
+		case 0x0a: // LDAX B
+		{
+			uint16_t offset = (state->b << 8) | state->c;
+			state->a = state->memory[offset];
+		}
+			break;
+		case 0x1a: // LDAX D
+		{
+			uint16_t offset = (state->d << 8) | state->e;
+			state->a = state->memory[offset];
+		}
+			break;
+		/* STAX instructions */
+		case 0x02: // STAX B
+		{
+			uint16_t offset = (state->b << 8) | state->c;
+			state->memory[offset] = state->a;
+		}
+			break;
+		case 0x12: // STAX D
+		{
+			uint16_t offset = (state->d << 8) | state->e;
+			state->memory[offset] = state->a;
+		}
+			break;
+		/* Direct Access Instructions */
+		case 0x22: // SHLD adr 2 bytes
+		{
+			uint16_t offset = (opCode[2] << 8) | opCode[1];
+			state->memory[offset] = state->l;
+			state->memory[offset + 1] = state->h;
+			state->pc += 2;
+		}
+			break;
+		case 0x2a: // LHLD adr 2 bytes
+		{
+			uint16_t offset = (opCode[2] << 8) | opCode[1];
+			state->l = state->memory[offset];
+			state->h = state->memory[offset + 1];
+			state->pc += 2;
+		}
+			break;
+		case 0x32: // STA adr 2 bytes
+		{
+			uint16_t offset = (opCode[2] << 8) | opCode[1];
+			state->memory[offset] = state->a;
+			state->pc += 2;
+		}
+			break;
+		case 0x3a: // LDA adr 2 bytes
+		{
+			uint16_t offset = (opCode[2] << 8) | opCode[1];
+			state->a = state->memory[offset];
+			state->pc += 2;
+		}
+			break;
+		case 0xe9: // PCHL 
+		{
+			uint16_t offset = (state->h << 8) | state->l;
+			state->pc = offset;
+		}
+			break;
+		case 0xeb: // XCHG
+		{
+			uint8_t tempD = state->d;
+			uint8_t tempE = state->e;
+			state->d = state->h;
+			state->e = state->l;
+			state->h = tempD;
+			state->l = tempE;
+		}
+			break;
+		/* Special Group Instructions */
+		case 0xfb: // EI: sets the integer enable flag
+			state->int_enable = 1;
+			break;
+		case 0xf3: // DI: disables the integer enable flag
+			state->int_enable = 0;
+			break;
+		case 0x76: // HLT 
+			exit(0);
+			break;
+/**************************************************************************************************
+* THE FOLLOWING IN AND OUT INSTRUCTIONS ARE NOT IMPLEMENTED YET
+***************************************************************************************************/
+		case 0xdb: // IN D8 NOTE: PLACEHOLDER COME BACK TO IMPLEMENT
+			state->pc++;
+			break;
+		case 0xd3: // OUT D8 NOTE: PLACEHOLDER COME BACK TO IMPLEMENT
+			state->pc++;
+			break;
+		case 0x00: // NOP
+			break;
 		/* JUMP instructions */
 		case 0xc2: // JNZ
 			if (state->cc.z == 0)
