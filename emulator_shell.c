@@ -6,6 +6,11 @@
 #include "cpu.h"
 
 
+/* Prototypes */
+void unimplementedInstruction(State8080*);
+void emulate8080(State8080*);
+
+
 /* Prints error message if unexpected instruction is encountered */
 void unimplementedInstruction(State8080* state) {
 	fprintf(stderr, "ERROR: Unimplemented instruction at $%x\n", &state->memory[state->pc]);
@@ -940,8 +945,4 @@ void emulate8080(State8080* state) {
 	}
 
 	state->pc += 1;
-}
-
-int main(int argc, char** argv) {
-	return 0;
 }
