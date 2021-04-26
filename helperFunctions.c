@@ -10,6 +10,7 @@
 #include <stdint.h>
 
 #include "helperFunctions.h"
+#include "cpu.h"
 
 
 
@@ -137,6 +138,33 @@ void setLogicFlagsA(State8080* state) {
 	state->cc.p = parity(state->a);
 }
 
+
+/* Reads one ROM file into memory at a specified offset */
+void readFiletoMem(State8080* state, char* fileName, uint32_t offset) {
+	FILE* fp = fopen(fileName, "rb");
+	if (fp == NULL) {
+		fprintf(stderr, "ERROR: could not open file %s\n", fp);
+		exit(1);
+	}
+
+	// open ROM file and read contents to memory, then close file
+	fseek(fp, 0L, SEEK_END);
+	size_t fsize = ftell(fp);
+	fseek(fp, 0L, SEEK_SET);
+
+	uint8_t memBuffer = state->memory[offset];
+	fread(memBuffer, fsize, 1, fp);
+	fclose(fp);
+}
+
+
+/* Reads the 4 space invaders ROM files into memory */
+void readInvaderstoMem(State8080* state) {
+	readFiletoMem(state, "./rom/invaders.h", 0x0000);
+	readFiletoMem(state, "./rom/invaders.g", 0x0800);
+	readFiletoMem(state, "./rom/invaders.f", 0x1000);
+	readFiletoMem(state, "./rom/invaders.e", 0x1800);
+}
 
 
 //Testing main for whatever helper function is needed

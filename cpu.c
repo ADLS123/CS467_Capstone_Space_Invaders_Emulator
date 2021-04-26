@@ -5,6 +5,13 @@
 ** CPU.
 **************************************************************************************************/
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#include "cpu.h"
+
+
 /* Simulates condition codes/flags of 8080 processor */
 typedef struct ConditionCodes {
 	uint8_t	z : 1;
@@ -13,8 +20,8 @@ typedef struct ConditionCodes {
 	uint8_t cy : 1;
 	uint8_t ac : 1;
 	uint8_t pad : 3;
-
 } ConditionCodes;
+
 
 /* Simulates registers, stack pointer, program counter, etc (overall state)  of 8080 processor */
 typedef struct State8080 {
@@ -31,5 +38,4 @@ typedef struct State8080 {
 	uint8_t* memory;
 	struct ConditionCodes cc;
 	uint8_t int_enable;
-
 } State8080;

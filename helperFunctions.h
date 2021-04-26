@@ -22,5 +22,8 @@ void setLogicFlagsA(State8080* state);
 void unimplementedInstruction(State8080*);
 void emulate8080(State8080*);
 
+// read invaders roms to memory
+void readInvaderstoMem(State8080* state);
+void readFiletoMem(State8080* state, char* fileName, uint32_t offset);
 
 #endif
