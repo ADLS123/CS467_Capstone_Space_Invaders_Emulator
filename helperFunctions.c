@@ -167,6 +167,13 @@ void readInvaderstoMem(State8080* state) {
 }
 
 
+void init8080CPU() {
+	State8080* state = calloc(1, sizeof(State8080));
+	state->memory = calloc(1, 0x10000) //16000 bytes allocated for memory;
+	return state;
+}
+
+
 //Testing main for whatever helper function is needed
 int main() {
 	int n = 23;
