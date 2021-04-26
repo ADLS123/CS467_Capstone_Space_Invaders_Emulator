@@ -75,6 +75,24 @@ void retFunc(State8080* state) {
 }
 
 
+/* Helper function for POP instructions */
+void popFunc(state8080* state, uint8_t* hi, uint8_t* lo) {
+	// lo is lower order bits, hi is higher order bits
+	lo = state->memory[state->sp]
+	hi = state->memory[state->sp + 1];
+	state->sp += 2;
+}
+
+
+/* Helper function for Push instructions*/
+void pushFunc(state8080* state, uint8_t* hi, uint8_t* lo) {
+	state->memory[state->sp - 1] = hi;
+	state->memory[state->sp - 2] = lo;
+	state->sp -= 2;
+}
+
+
+
 /*
 * NOTE: Function for setting the state comes from https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
 */
@@ -86,11 +104,14 @@ void setLogicFlagsA(State8080* state) {
 	state->cc.s = logicSetSign(state->a);
 	state->cc.p = parity(state->a);
 }
+
+
 /* Prints error message if unexpected instruction is encountered */
 void unimplementedInstruction(State8080* state) {
 	fprintf(stderr, "ERROR: Unimplemented instruction at $%x\n", &state->memory[state->pc]);
 	exit(1);
 }
+
 
 /* Contains code for emulating opcodes */
 void emulate8080(State8080* state) {
@@ -745,24 +766,6 @@ void emulate8080(State8080* state) {
 		case 0x76: // HLT 
 			exit(0);
 			break;
-/**************************************************************************************************
-* THE FOLLOWING IN AND OUT INSTRUCTIONS ARE NOT IMPLEMENTED YET
-***************************************************************************************************/
-		case 0xdb: // IN D8 NOTE: PLACEHOLDER COME BACK TO IMPLEMENT
-			state->pc++;
-			break;
-		case 0xd3: // OUT D8 NOTE: PLACEHOLDER COME BACK TO IMPLEMENT
-			state->pc++;
-			break;
-		case 0x00: // NOP
-			break;
-		/* JUMP instructions */
-		case 0xc2: // JNZ
-			if (state->cc.z == 0)
-				state->pc = (opCode[2] << 8 | opCode[1]);
-			else
-				state->pc += 2;
-			break;
 
 		case 0xc3: // JMP
 			state->pc = (opCode[2] << 8 | opCode[1]);
@@ -954,6 +957,7 @@ void emulate8080(State8080* state) {
 			if (state->cc.s == 1)
 				retFunc(state);
 			break;
+
 		/*--------------------------------*/
 		/* INX instructions, Flags are not affected: Register  + 1 */
 		case 0x03: //INX B
@@ -1429,6 +1433,83 @@ void emulate8080(State8080* state) {
             state->cc.p = parity(value&0xff);    
             state->a = value & 0xff;  
 			state->pc++;
+      break
+
+		/* Stack group push and pop instructions */
+		case 0xc1: // POP B
+			popFunc(state, &state->b, &state->c);
+			break;
+
+		case 0xc5: // PUSH B
+			pushFunc(state, &state->b, &state->c);
+			break;
+
+		case 0xd1: // POP D
+			popFunc(state, &state->d, &state->e);
+			break;
+
+		case 0xd5: // PUSH D
+			pushFunc(state, &state->d, &state->e);
+			break;
+
+		case 0xe1: // POP H
+			popFunc(state, &state - h, &state->l);
+			break;
+
+		case 0xe5: // PUSH H
+			pushFunc(state, &state->h, &state->l);
+			break;
+
+		case 0xf1: // POP PSW
+			uint8_t psw;
+			popFunc(state, &state->a, &psw);
+			// update flags according to psw
+			// bit shift right bit to bit 0, and then apply bitmask
+			state->cc.cy = psw & 0x01;
+			state->cc.p = (psw >> 2) & 0x01;
+			state->cc.ac = (psw >> 4) & 0x01;
+			state->cc.z = (psw >> 6) &  0x01;
+			state->cc.s = (psw >> 7) & 0x01;
+			break;
+
+		case 0xf5: // PUSH PSW
+			uint8_t psw = (s << 7 |
+							z << 6 |
+							ac << 4 |
+							p << 2 |
+							cy);
+			pushFunc(state, &state->a, &psw);
+			break;
+
+		case 0xf9: // SPHL
+			state->sp = H << 8 | L;
+			break;
+
+		case 0xe3: // XTHL
+			uint8_t hi_buffer = state->h;
+			uint8_t lo_buffer = state->l;
+			popFunc(state, &state->h, &state->l);
+			pushFunc(state, &hi_buffer, &lo_buffer);
+			break;
+
+		/**************************************************************************************************
+		* THE FOLLOWING IN AND OUT INSTRUCTIONS ARE NOT IMPLEMENTED YET
+		***************************************************************************************************/
+		case 0xdb: // IN D8 NOTE: PLACEHOLDER COME BACK TO IMPLEMENT
+			state->pc++;
+			break;
+		case 0xd3: // OUT D8 NOTE: PLACEHOLDER COME BACK TO IMPLEMENT
+			state->pc++;
+			break;
+		case 0x00: // NOP
+			break;
+			/* JUMP instructions */
+		case 0xc2: // JNZ
+			if (state->cc.z == 0)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
+
 			break;
 	}
 
