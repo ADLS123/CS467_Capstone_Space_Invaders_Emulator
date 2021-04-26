@@ -6,6 +6,8 @@
 **************************************************************************************************/
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 #include "helperFunctions.h"
 
@@ -69,10 +71,70 @@ int setDoubleCarry(int value) {
 }
 
 
-
 //function for setting the zero flag based off of a parameter value
 int zero(int value) {
 	return (value == 0);
+}
+
+
+/* Helper function for CALL instructions */
+void callFunc(State8080* state, uint16_t callAddr) {
+	// set return address based on how long the instruction is
+	uint16_t pcIncr = 0;
+	if (callAddr = UINT16_MAX)
+		pcIncr = 2;
+	// push return address on stack (actually return address - 1, bc of pc increment after switch cases)
+	uint16_t retAddr = state->pc + pcIncr;
+	state->memory[state->sp - 1] = (retAddr >> 8) & 0xff;
+	state->memory[state->sp - 2] = retAddr & 0xff;
+
+	// if no address is specified, UINT16_MAX used for no specific address
+	if (callAddr == UINT16_MAX) {
+		unsigned char* opCode = &state->memory[state->pc];
+		state->pc = (opCode[2] << 8 | opCode[1]);
+	}
+	// if address is specified
+	else {
+		state->pc = callAddr;
+	}
+}
+
+
+/* Helper function for RET instructions */
+void retFunc(State8080* state) {
+	uint16_t retAddr = (state->memory[state->sp + 1] << 8) | state->memory[state->sp];
+	state->pc = retAddr;
+	state->sp += 2;
+}
+
+
+/* Helper function for POP instructions */
+void popFunc(State8080* state, uint8_t* hi, uint8_t* lo) {
+	// lo is lower order bits, hi is higher order bits
+	lo = state->memory[state->sp];
+	hi = state->memory[state->sp + 1];
+	state->sp += 2;
+}
+
+
+/* Helper function for Push instructions*/
+void pushFunc(State8080* state, uint8_t* hi, uint8_t* lo) {
+	state->memory[state->sp - 1] = hi;
+	state->memory[state->sp - 2] = lo;
+	state->sp -= 2;
+}
+
+
+/*
+* NOTE: Function for setting the state comes from https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
+*/
+
+void setLogicFlagsA(State8080* state) {
+	state->cc.cy = 0;
+	state->cc.ac = 0;
+	state->cc.z = zero(state->a);
+	state->cc.s = logicSetSign(state->a);
+	state->cc.p = parity(state->a);
 }
 
 
