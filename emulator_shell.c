@@ -294,12 +294,11 @@ void emulate8080(State8080* state) {
 		}
 			break;
 		/* RLC instructions */
-		/* Code comes from swapping directions of RRC code from http://emulator101.com/ */
 		case 0x07: // RLC
 		{
 			uint8_t value = state->a;
 			state->a = (value >> 7) | (value << 1);
-			state->cc.cy = (1 == (value & 1));
+			state->cc.cy = (128 == (value & 128));	//sets carry to high order bit
 		}
 			break;
 		/* RRC instructions */
@@ -308,11 +307,10 @@ void emulate8080(State8080* state) {
 		{
 			uint8_t value = state->a;
 			state->a = ((value & 1) << 7) | (value >> 1);
-			state->cc.cy = (1 == (value & 1));
+			state->cc.cy = (1 == (value & 1));		//sets carry bit to low order bit
 		}
 			break;
 		/* RAL instructions */
-		/* Code comes from swapping directions of RAR code from http://emulator101.com/ */
 		case 0x17: // RAL
 		{
 			uint8_t value = state->a;
@@ -330,7 +328,7 @@ void emulate8080(State8080* state) {
 		}
 			break;
 		/* ANI instruction */
-		/* Code comes from the Emulator Logic Branch page: http://emulator101.com/ */
+		//performs an AND operation on the accumulator with operand, resets carry bit to 0
 		case 0xe6: // ANI byte
 		{
 			uint8_t value = state->a & opCode[1];
