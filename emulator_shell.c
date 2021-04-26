@@ -76,16 +76,16 @@ void retFunc(State8080* state) {
 
 
 /* Helper function for POP instructions */
-void popFunc(state8080* state, uint8_t* hi, uint8_t* lo) {
+void popFunc(State8080* state, uint8_t* hi, uint8_t* lo) {
 	// lo is lower order bits, hi is higher order bits
-	lo = state->memory[state->sp]
+	lo = state->memory[state->sp];
 	hi = state->memory[state->sp + 1];
 	state->sp += 2;
 }
 
 
 /* Helper function for Push instructions*/
-void pushFunc(state8080* state, uint8_t* hi, uint8_t* lo) {
+void pushFunc(State8080* state, uint8_t* hi, uint8_t* lo) {
 	state->memory[state->sp - 1] = hi;
 	state->memory[state->sp - 2] = lo;
 	state->sp -= 2;
@@ -976,7 +976,7 @@ void emulate8080(State8080* state) {
 			break;
 
 		case 0xe1: // POP H
-			popFunc(state, &state - h, &state->l);
+			popFunc(state, &state->h, &state->l);
 			break;
 
 		case 0xe5: // PUSH H
@@ -984,6 +984,7 @@ void emulate8080(State8080* state) {
 			break;
 
 		case 0xf1: // POP PSW
+		{
 			uint8_t psw;
 			popFunc(state, &state->a, &psw);
 			// update flags according to psw
@@ -991,28 +992,33 @@ void emulate8080(State8080* state) {
 			state->cc.cy = psw & 0x01;
 			state->cc.p = (psw >> 2) & 0x01;
 			state->cc.ac = (psw >> 4) & 0x01;
-			state->cc.z = (psw >> 6) &  0x01;
+			state->cc.z = (psw >> 6) & 0x01;
 			state->cc.s = (psw >> 7) & 0x01;
+		}
 			break;
 
 		case 0xf5: // PUSH PSW
-			uint8_t psw = (s << 7 |
-							z << 6 |
-							ac << 4 |
-							p << 2 |
-							cy);
+		{
+			uint8_t psw = (state->cc.s << 7 |
+				state->cc.z << 6 |
+				state->cc.ac << 4 |
+				state->cc.p << 2 |
+				state->cc.cy);
 			pushFunc(state, &state->a, &psw);
+		}
 			break;
 
 		case 0xf9: // SPHL
-			state->sp = H << 8 | L;
+			state->sp = state->h << 8 | state->l;
 			break;
 
 		case 0xe3: // XTHL
+		{
 			uint8_t hi_buffer = state->h;
 			uint8_t lo_buffer = state->l;
 			popFunc(state, &state->h, &state->l);
 			pushFunc(state, &hi_buffer, &lo_buffer);
+		}
 			break;
 
 		/**************************************************************************************************
