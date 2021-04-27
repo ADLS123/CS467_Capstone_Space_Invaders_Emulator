@@ -27,6 +27,6 @@ void readInvaderstoMem(State8080* state);
 void readFiletoMem(State8080* state, char* fileName, uint32_t offset);
 
 // initialize state
-void init8080CPU(void);
+State8080* init8080CPU(void);
 
 #endif
