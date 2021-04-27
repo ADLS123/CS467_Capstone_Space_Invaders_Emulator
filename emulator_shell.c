@@ -1037,12 +1037,13 @@ void emulate8080(State8080* state) {
 		}
 		case 0x34: //INR M
 		{
-			uint16_t value = (uint16_t) state->m + 1;    
+			uint16_t offset = (state->h << 8) | state->l;
+			uint16_t value = offset + 1;    
             state->cc.z = ((value & 0xff) == 0);    
             state->cc.s = ((value & 0x80) != 0);    
             state->cc.cy = (value > 0xff);    
             state->cc.p = parity(value&0xff);    
-            state->m = value & 0xff;  
+            state->memory[offset] = value & 0xff;  
 			break;
 		}
 		case 0x3c: //INR A
@@ -1117,16 +1118,16 @@ void emulate8080(State8080* state) {
 			break;
 		}
 		
-		/// State doesn't have an m register, this is actually an OR'ing of h and l
 
 		case 0x35: //DCR M
 		{
-			uint16_t value = (uint16_t) state->m - 1;    
+			uint16_t offset = (state->h << 8) | state->l;
+			uint16_t value = offset - 1;    
             state->cc.z = ((value & 0xff) == 0);    
             state->cc.s = ((value & 0x80) != 0);    
             state->cc.cy = (value > 0xff);    
             state->cc.p = parity(value&0xff);    
-            state->m = value & 0xff;  
+            state->memory[offset] = value & 0xff;  
 			break;
 		}
 		case 0x3d: //DCR A
@@ -1204,7 +1205,8 @@ void emulate8080(State8080* state) {
 		}
 		case 0x86:      //ADD M 
 		{       
-            uint16_t value = (uint16_t) state->a + (uint16_t) state->m;    
+			uint16_t offset = (state->h << 8) | state->l;
+            uint16_t value = (uint16_t) state->a + offset;    
             state->cc.z = ((value & 0xff) == 0);    
             state->cc.s = ((value & 0x80) != 0);    
             state->cc.cy = (value > 0xff);    
@@ -1285,7 +1287,8 @@ void emulate8080(State8080* state) {
 		}
 		case 0x8e:      //ADC M 
 		{    
-            uint16_t value = (uint16_t) state->a + (uint16_t) state->m + (uint16_t)state->cc.cy;    
+			uint16_t offset = (state->h << 8) | state->l;
+            uint16_t value = (uint16_t) state->a + offset + (uint16_t)state->cc.cy;    
             state->cc.z = ((value & 0xff) == 0);    
             state->cc.s = ((value & 0x80) != 0);    
             state->cc.cy = (value > 0xff);    
@@ -1366,7 +1369,8 @@ void emulate8080(State8080* state) {
 		}
 		case 0x96:      //SUB M
 		{
-            uint16_t value = (uint16_t) state->a - (uint16_t) state->m;    
+			uint16_t offset = (state->h << 8) | state->l;
+            uint16_t value = (uint16_t) state->a - offset;    
             state->cc.z = ((value & 0xff) == 0);    
             state->cc.s = ((value & 0x80) != 0);    
             state->cc.cy = (value > 0xff);    
@@ -1455,9 +1459,9 @@ void emulate8080(State8080* state) {
             state->a = value & 0xff;  
 			break;
 		}
-		case 0x9f:      //SBB F
+		case 0x9f:      //SBB A
 		{
-            uint16_t value = (uint16_t) state->a - (uint16_t) state->f - (uint16_t)state->cc.cy;    
+            uint16_t value = (uint16_t) state->a - (uint16_t) state->a - (uint16_t)state->cc.cy;    
             state->cc.z = ((value & 0xff) == 0);    
             state->cc.s = ((value & 0x80) != 0);    
             state->cc.cy = (value > 0xff);    
