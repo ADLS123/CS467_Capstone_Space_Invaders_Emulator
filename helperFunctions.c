@@ -4,7 +4,6 @@
 ** Description: This file contains the function definitions to encapsulate the work related to 
 		the various flag setting required for the Space Invaders ROM
 **************************************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>

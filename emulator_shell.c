@@ -13,7 +13,7 @@ void emulate8080(State8080*);
 
 /* Prints error message if unexpected instruction is encountered */
 void unimplementedInstruction(State8080* state) {
-	fprintf(stderr, "ERROR: Unimplemented instruction at $%x\n", &state->memory[state->pc]);
+	fprintf(stderr, "ERROR: Unimplemented instruction at $%x\n", state->memory[state->pc]);
 	exit(1);
 }
 
@@ -668,6 +668,15 @@ void emulate8080(State8080* state) {
 			break;
 		case 0x76: // HLT 
 			exit(0);
+			break;
+
+
+			/* JUMP instructions */
+		case 0xc2: // JNZ
+			if (state->cc.z == 0)
+				state->pc = (opCode[2] << 8 | opCode[1]);
+			else
+				state->pc += 2;
 			break;
 
 		case 0xc3: // JMP
@@ -1548,13 +1557,6 @@ void emulate8080(State8080* state) {
 		case 0xed:
 			break;
 		case 0xfd:
-			break;
-			/* JUMP instructions */
-		case 0xc2: // JNZ
-			if (state->cc.z == 0)
-				state->pc = (opCode[2] << 8 | opCode[1]);
-			else
-				state->pc += 2;
 			break;
 	}
 
