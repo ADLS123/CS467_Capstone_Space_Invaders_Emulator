@@ -11,7 +11,7 @@
 #include "helperFunctions.h"
 #include "cpu.h"
 
-
+#pragma warning (disable: 4996)
 
 /****************************************************************************************
 ** Function Name: int parity(int value)
@@ -159,10 +159,10 @@ void readFiletoMem(State8080* state, char* fileName, uint32_t offset) {
 
 /* Reads the 4 space invaders ROM files into memory */
 void readInvaderstoMem(State8080* state) {
-	readFiletoMem(state, "./rom/invaders.h", 0x0000);
-	readFiletoMem(state, "./rom/invaders.g", 0x0800);
-	readFiletoMem(state, "./rom/invaders.f", 0x1000);
-	readFiletoMem(state, "./rom/invaders.e", 0x1800);
+	readFiletoMem(state, "./roms/invaders.h", 0x0000);
+	readFiletoMem(state, "./roms/invaders.g", 0x0800);
+	readFiletoMem(state, "./roms/invaders.f", 0x1000);
+	readFiletoMem(state, "./roms/invaders.e", 0x1800);
 }
 
 
@@ -172,7 +172,7 @@ State8080* init8080CPU() {
 	return state;
 }
 
-
+/*
 //Testing main for whatever helper function is needed
 int main() {
 	int n = 23;
@@ -192,3 +192,4 @@ int main() {
 	else { printf("not zero"); }
 	return 0;
 }
+*/

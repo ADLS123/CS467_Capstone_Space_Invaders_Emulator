@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+
+#pragma warning (disable: 4996)
 /**
     extractOPCode is used to map an opcode to print instructions to
     the standard output based on the code currently being read. 
@@ -294,7 +296,7 @@ uint16_t convertFromLE(unsigned char* bytes) {
 }
 
 
-int main(int argc, char** argv) {
+int disassembleRom(int argc, char** argv) {
     FILE* fp = fopen(argv[1], "rb");
     if (fp == NULL) {
         fprintf(stderr, "ERROR: could not open file %s\n", argv[1]);
