@@ -4,7 +4,7 @@
 ** Description: This file contains function declarations for the helper functions for 
 		the Space Invaders ROM
 ****************************************************************************************/
-
+#include "cpu.h"
 
 #ifndef HELPERFUNCTIONS_H
 #define HELPERFUNCTIONS_H
@@ -16,17 +16,19 @@ int setDoubleCarry(int value);
 int logicSetSign(int value);
 int zero(int value);		//function for setting the zero flag
 
-void callFunc(State8080*, uint16_t);
-void retFunc(State8080*);
+void callFunc(State8080* state, uint16_t callAddr);
+void retFunc(State8080* state);
+void popFunc(State8080* state, uint8_t* hi, uint8_t* lo);
+void pushFunc(State8080* state, uint8_t* hi, uint8_t* lo);
 void setLogicFlagsA(State8080* state);
-void unimplementedInstruction(State8080*);
-void emulate8080(State8080*);
+void unimplementedInstruction(State8080* state);
+void emulate8080(State8080* state);
 
 // read invaders roms to memory
 void readInvaderstoMem(State8080* state);
 void readFiletoMem(State8080* state, char* fileName, uint32_t offset);
 
 // initialize state
-void init8080CPU(void);
+State8080* init8080CPU(void);
 
 #endif

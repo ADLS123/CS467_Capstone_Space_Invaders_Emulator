@@ -4,7 +4,6 @@
 ** Description: This file contains the function definitions to encapsulate the work related to 
 		the various flag setting required for the Space Invaders ROM
 **************************************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -112,16 +111,16 @@ void retFunc(State8080* state) {
 /* Helper function for POP instructions */
 void popFunc(State8080* state, uint8_t* hi, uint8_t* lo) {
 	// lo is lower order bits, hi is higher order bits
-	lo = state->memory[state->sp];
-	hi = state->memory[state->sp + 1];
+	*lo = state->memory[state->sp];
+	*hi = state->memory[state->sp + 1];
 	state->sp += 2;
 }
 
 
 /* Helper function for Push instructions*/
 void pushFunc(State8080* state, uint8_t* hi, uint8_t* lo) {
-	state->memory[state->sp - 1] = hi;
-	state->memory[state->sp - 2] = lo;
+	state->memory[state->sp - 1] = *hi;
+	state->memory[state->sp - 2] = *lo;
 	state->sp -= 2;
 }
 
@@ -143,7 +142,7 @@ void setLogicFlagsA(State8080* state) {
 void readFiletoMem(State8080* state, char* fileName, uint32_t offset) {
 	FILE* fp = fopen(fileName, "rb");
 	if (fp == NULL) {
-		fprintf(stderr, "ERROR: could not open file %s\n", fp);
+		fprintf(stderr, "ERROR: could not open file %s\n", fileName);
 		exit(1);
 	}
 
@@ -152,7 +151,7 @@ void readFiletoMem(State8080* state, char* fileName, uint32_t offset) {
 	size_t fsize = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 
-	uint8_t memBuffer = state->memory[offset];
+	uint8_t* memBuffer = &state->memory[offset];
 	fread(memBuffer, fsize, 1, fp);
 	fclose(fp);
 }
@@ -167,9 +166,9 @@ void readInvaderstoMem(State8080* state) {
 }
 
 
-void init8080CPU() {
+State8080* init8080CPU() {
 	State8080* state = calloc(1, sizeof(State8080));
-	state->memory = calloc(1, 0x10000) //16000 bytes allocated for memory;
+	state->memory = calloc(1, 0x10000); //16000 bytes allocated for memory
 	return state;
 }
 
