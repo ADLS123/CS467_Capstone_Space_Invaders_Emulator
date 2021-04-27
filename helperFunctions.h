@@ -4,7 +4,7 @@
 ** Description: This file contains function declarations for the helper functions for 
 		the Space Invaders ROM
 ****************************************************************************************/
-
+#include "cpu.h"
 
 #ifndef HELPERFUNCTIONS_H
 #define HELPERFUNCTIONS_H

@@ -4,6 +4,9 @@
 ** Description: This file contains prototypes for structs that define the state of the
 ** simulated 8080 cpu.
 ****************************************************************************************/
+#include <stdlib.h>
+#include <stdint.h>
+
 #ifndef CPU_H
 #define CPU_H
 
