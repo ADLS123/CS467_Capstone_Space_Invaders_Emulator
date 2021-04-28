@@ -1133,8 +1133,50 @@ void emulate8080(State8080* state) {
             state->a = value & 0xff;  
 			break;
 		}
-		/* DAD instructions, Flags are not affected: Register  + 1 */
-		/* PLACEHOLDER */
+		/* DAD instructions,Only carry flag is affected*/
+		case 0x09: //DAD B- Register B is pairs b-c
+		{
+			uint16_t hl = (state->h << 8) | state->l;
+			uint16_t B = (state->b << 8) | state->c; 
+			uint16_t value = hl + B;
+			state->l = value & 0xff;
+			state->h = (value >> 8) & 0xff;   
+			state->cc.p = setCarry((value >> 8));  
+              
+			break;
+		}
+		case 0x19: //DAD H - Register D is pair d-e
+		{
+			uint16_t hl = (state->h << 8) | state->l;
+			uint16_t D = (state->d << 8) | state->e; 
+			uint16_t value = hl + D;
+			state->l = value & 0xff;
+			state->h = (value >> 8) & 0xff;   
+			state->cc.p = setCarry((value >> 8));  
+              
+			break;
+		}
+		case 0x29: //DAD D - Register D is pair d-e
+		{
+			uint16_t hl = (state->h << 8) | state->l;
+			uint16_t H = (state->h << 8) | state->l; 
+			uint16_t value = hl + H;
+			state->l = value & 0xff;
+			state->h = (value >> 8) & 0xff;   
+			state->cc.p = setCarry((value >> 8));  
+              
+			break;
+		}
+		case 0x39: //DAD SP 
+		{
+			uint16_t hl = (state->h << 8) | state->l;
+			uint16_t value = hl + state->sp;
+			state->l = value & 0xff;
+			state->h = (value >> 8) & 0xff;   
+			state->cc.p = setCarry((value >> 8));  
+              
+			break;
+		}
 		/* ADD instructions: Register A + Mem */
 		case 0x80: //ADD B
 		{
