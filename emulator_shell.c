@@ -987,7 +987,7 @@ void emulate8080(State8080* state) {
 		case 0x04: //INR B
 		{
 			uint16_t value = (uint16_t) state->b + 1;    
-            sstate->cc.z = zero(value);   
+            state->cc.z = zero(value);   
             state->cc.s = logicSetSign(value);     
             state->cc.p = parity(value);    
             state->b = value & 0xff;  
