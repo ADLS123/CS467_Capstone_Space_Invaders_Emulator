@@ -91,11 +91,12 @@ void callFunc(State8080* state, uint16_t callAddr) {
 	// if no address is specified, UINT16_MAX used for no specific address
 	if (callAddr == UINT16_MAX) {
 		unsigned char* opCode = &state->memory[state->pc];
-		state->pc = (opCode[2] << 8 | opCode[1]);
+		state->pc = (opCode[2] << 8 | opCode[1])-1;
+	
 	}
 	// if address is specified
 	else {
-		state->pc = callAddr;
+		state->pc = callAddr-1;
 	}
 }
 

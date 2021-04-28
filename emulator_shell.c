@@ -677,7 +677,7 @@ void emulate8080(State8080* state) {
 			if (state->cc.z == 0)
 				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
-				state->pc += 1;
+				state->pc += 2;
 			break;
 
 		case 0xc3: // JMP
@@ -688,7 +688,7 @@ void emulate8080(State8080* state) {
 			if (state->cc.z == 1)
 				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else 
-				state->pc += 1;
+				state->pc += 2;
 			break;
 
 		case 0xd2: // JNC
@@ -754,7 +754,6 @@ void emulate8080(State8080* state) {
 
 		case 0xcd: // CALL
 			callFunc(state, UINT16_MAX);
-			state->pc--;
 			break;
 
 		case 0xcf: // RST 1
