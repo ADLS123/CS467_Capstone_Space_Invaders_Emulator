@@ -695,42 +695,42 @@ void emulate8080(State8080* state) {
 			if (state->cc.cy == 0)
 				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
-				state->pc += 1;
+				state->pc += 2;
 			break;
 
 		case 0xda: // JC
 			if (state->cc.cy == 1)
 				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
-				state->pc += 1;
+				state->pc += 2;
 			break;
 
 		case 0xe2: // JPO
 			if (state->cc.p == 0)
 				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
-				state->pc += 1;
+				state->pc += 2;
 			break;
 
 		case 0xea: // JPE
 			if (state->cc.p == 1)
 				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
-				state->pc += 1;
+				state->pc += 2;
 			break;
 
 		case 0xf2: // JP (plus sign)
 			if (state->cc.s == 0)
 				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
-				state->pc += 1;
+				state->pc += 2;
 			break;
 
 		case 0xfa: // JM (minus sign)
 			if (state->cc.s == 1)
 				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
-				state->pc += 1;
+				state->pc += 2;
 			break;
 
 		/* CALL and RET instructions */
