@@ -10,6 +10,8 @@ int main(int argc, char** argv) {
 	State8080* state = init8080CPU();
 	readInvaderstoMem(state);
 	
+	
+	printf("Press enter whenever you want to load the next instruction\n");
 	while (1) {
 		
 		if(getchar());
