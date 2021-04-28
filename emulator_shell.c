@@ -987,60 +987,54 @@ void emulate8080(State8080* state) {
 		case 0x04: //INR B
 		{
 			uint16_t value = (uint16_t) state->b + 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            sstate->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->b = value & 0xff;  
 			break;
 		}
 		case 0x0c: //INR C
 		{
 			uint16_t value = (uint16_t) state->c + 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->c = value & 0xff;  
 			break;
 		}
 		case 0x14: //INR D
 		{
 			uint16_t value = (uint16_t) state->d + 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);   
             state->d = value & 0xff;  
 			break;
 		}
 		case 0x1C: //INR E
 		{
 			uint16_t value = (uint16_t) state->e + 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->e = value & 0xff;  
 			break;
 		}
 		case 0x24: //INR H
 		{
 			uint16_t value = (uint16_t) state->h + 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->h = value & 0xff;  
 			break;
 		}
 		case 0x2C: //INR L
 		{
 			uint16_t value = (uint16_t) state->l + 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->l = value & 0xff;  
 			break;
 		}
@@ -1048,20 +1042,18 @@ void emulate8080(State8080* state) {
 		{
 			uint16_t offset = (state->h << 8) | state->l;
 			uint16_t value = offset + 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);   
             state->memory[offset] = value & 0xff;  
 			break;
 		}
 		case 0x3c: //INR A
 		{
 			uint16_t value = (uint16_t) state->a + 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);   
             state->a = value & 0xff;  
 			break;
 		}
@@ -1069,60 +1061,54 @@ void emulate8080(State8080* state) {
 		case 0x05: //DCR B
 		{
 			uint16_t value = (uint16_t) state->b - 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->b = value & 0xff;  
 			break;
 		}
 		case 0x0d: //DCR C
 		{
 			uint16_t value = (uint16_t) state->c - 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->c = value & 0xff;  
 			break;
 		}
 		case 0x15: //DCR D
 		{
 			uint16_t value = (uint16_t) state->d - 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->d = value & 0xff;  
 			break;
 		}
 		case 0x1d: //DCR E
 		{
 			uint16_t value = (uint16_t) state->e - 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->e = value & 0xff;  
 			break;
 		}
 		case 0x25: //DCR H
 		{
 			uint16_t value = (uint16_t) state->h - 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->h = value & 0xff;  
 			break;
 		}
 		case 0x2d: //DCR L
 		{
 			uint16_t value = (uint16_t) state->l - 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);   
             state->l = value & 0xff;  
 			break;
 		}
@@ -1132,20 +1118,18 @@ void emulate8080(State8080* state) {
 		{
 			uint16_t offset = (state->h << 8) | state->l;
 			uint16_t value = offset - 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);   
             state->memory[offset] = value & 0xff;  
 			break;
 		}
 		case 0x3d: //DCR A
 		{
 			uint16_t value = (uint16_t) state->a - 1;    
-            state->cc.z = ((value & 0xff) == 0);    
-            state->cc.s = ((value & 0x80) != 0);    
-            state->cc.cy = (value > 0xff);    
-            state->cc.p = parity(value&0xff);    
+            state->cc.z = zero(value);   
+            state->cc.s = logicSetSign(value);     
+            state->cc.p = parity(value);    
             state->a = value & 0xff;  
 			break;
 		}
