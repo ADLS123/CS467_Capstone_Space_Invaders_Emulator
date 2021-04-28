@@ -580,6 +580,7 @@ void emulate8080(State8080* state) {
 		case 0x21: // LXI H, D16
 			state->l = opCode[1];
 			state->h = opCode[2];
+			state->pc += 2;
 			break;
 		case 0x31: // LXI SP, D16
 			//from URL : https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
@@ -674,60 +675,60 @@ void emulate8080(State8080* state) {
 			/* JUMP instructions */
 		case 0xc2: // JNZ
 			if (state->cc.z == 0)
-				state->pc = (opCode[2] << 8 | opCode[1]);
+				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
 				state->pc += 2;
 			break;
 
 		case 0xc3: // JMP
-			state->pc = (opCode[2] << 8 | opCode[1]);
+			state->pc = (opCode[2] << 8 | opCode[1])-1;
 			break;
 
 		case 0xca: // JZ
 			if (state->cc.z == 1)
-				state->pc = (opCode[2] << 8 | opCode[1]);
+				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else 
 				state->pc += 2;
 			break;
 
 		case 0xd2: // JNC
 			if (state->cc.cy == 0)
-				state->pc = (opCode[2] << 8 | opCode[1]);
+				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
 				state->pc += 2;
 			break;
 
 		case 0xda: // JC
 			if (state->cc.cy == 1)
-				state->pc = (opCode[2] << 8 | opCode[1]);
+				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
 				state->pc += 2;
 			break;
 
 		case 0xe2: // JPO
 			if (state->cc.p == 0)
-				state->pc = (opCode[2] << 8 | opCode[1]);
+				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
 				state->pc += 2;
 			break;
 
 		case 0xea: // JPE
 			if (state->cc.p == 1)
-				state->pc = (opCode[2] << 8 | opCode[1]);
+				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
 				state->pc += 2;
 			break;
 
 		case 0xf2: // JP (plus sign)
 			if (state->cc.s == 0)
-				state->pc = (opCode[2] << 8 | opCode[1]);
+				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
 				state->pc += 2;
 			break;
 
 		case 0xfa: // JM (minus sign)
 			if (state->cc.s == 1)
-				state->pc = (opCode[2] << 8 | opCode[1]);
+				state->pc = (opCode[2] << 8 | opCode[1])-1;
 			else
 				state->pc += 2;
 			break;
