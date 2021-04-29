@@ -31,4 +31,7 @@ void readFiletoMem(State8080* state, char* fileName, uint32_t offset);
 // initialize state
 State8080* init8080CPU(void);
 
+// print opcode function prototype
+int extractOpCode(unsigned char* buffer, int pc);
+
 #endif
