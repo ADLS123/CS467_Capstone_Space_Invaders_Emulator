@@ -81,7 +81,7 @@ int zero(int value) {
 void callFunc(State8080* state, uint16_t callAddr) {
 	// set return address based on how long the instruction is
 	uint16_t pcIncr = 0;
-	if (callAddr = UINT16_MAX)
+	if (callAddr == UINT16_MAX)
 		pcIncr = 2;
 	// push return address on stack (actually return address - 1, bc of pc increment after switch cases)
 	uint16_t retAddr = state->pc + pcIncr;
