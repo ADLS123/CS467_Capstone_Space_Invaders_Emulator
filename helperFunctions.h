@@ -23,6 +23,7 @@ void pushFunc(State8080* state, uint8_t* hi, uint8_t* lo);
 void setLogicFlagsA(State8080* state);
 void unimplementedInstruction(State8080* state);
 void emulate8080(State8080* state);
+void generateInterrupt(State8080* state, int interruptNum);
 
 // read invaders roms to memory
 void readInvaderstoMem(State8080* state);
