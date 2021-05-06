@@ -31,12 +31,11 @@ int main(int argc, char** argv) {
 
 		// trigger interrupt if 1/60 of a second has passed since last interrupt, and interrupts are enabled
 		clock_gettime(CLOCK_MONOTONIC_RAW, &nowTime);
-		if (nowTime.tv_nsec - lastInterrupt > 1. / 60. && state->int_enable) {
+		if (nowTime.tv_nsec - lastInterrupt > 1000000000. / 60. && state->int_enable) {
 			generateInterrupt(state, 2);
 			lastInterrupt = nowTime.tv_nsec;
 		}
 
 	}
-
 	return 0;
 }
