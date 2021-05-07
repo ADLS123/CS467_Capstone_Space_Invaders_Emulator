@@ -24,7 +24,7 @@ void setLogicFlagsA(State8080* state);
 void unimplementedInstruction(State8080* state);
 void emulate8080(State8080* state);
 void generateInterrupt(State8080* state, int interruptNum);
-
+int runRom();
 // read invaders roms to memory
 void readInvaderstoMem(State8080* state);
 void readFiletoMem(State8080* state, char* fileName, uint32_t offset);
