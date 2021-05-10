@@ -1,7 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 199309L // for CLOCK_REALTIME to work
+#endif
+
 #include <time.h>
+
 //#include <iostream>
 
 #include "helperFunctions.h"
@@ -30,7 +36,7 @@ int main(int argc, char** argv) {
 		}
 
 		// trigger interrupt if 1/60 of a second has passed since last interrupt, and interrupts are enabled
-		clock_gettime(CLOCK_MONOTONIC_RAW, &nowTime);
+		clock_gettime(CLOCK_REALTIME, &nowTime);
 		if (nowTime.tv_nsec - lastInterrupt > 1000000000. / 60. && state->int_enable) {
 			generateInterrupt(state, 2);
 			lastInterrupt = nowTime.tv_nsec;

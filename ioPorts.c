@@ -42,3 +42,8 @@ void machineOUT(State8080* state, StateSIMachine* machine, uint8_t port) {
 		}
 	}
 }
+
+StateSIMachine* initSIMachine() {
+	StateSIMachine* machine = calloc(1, sizeof(StateSIMachine));
+	return machine;
+}
