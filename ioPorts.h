@@ -19,7 +19,7 @@ typedef struct StateSIMachine {
 
 
 // function prototypes
-uint8_t machineIN(State8080* state, StateSIMachine* machine, uint8_t port);
+void machineIN(State8080* state, StateSIMachine* machine, uint8_t port);
 void machineOUT(State8080* state, StateSIMachine* machine, uint8_t port);
 StateSIMachine* initSIMachine(void);
 

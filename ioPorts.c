@@ -10,8 +10,8 @@
 #include "cpu.h"
 
 
-/* Reads from the machine ports into the CPU */
-uint8_t machineIN(State8080* state, StateSIMachine* machine, uint8_t port) {
+/* Reads from the machine ports into the CPU A register*/
+void machineIN(State8080* state, StateSIMachine* machine, uint8_t port) {
 	uint8_t output = 0;
 	switch (port) {
 		case 3:		// read from shift registers based on shiftAmt
@@ -21,7 +21,7 @@ uint8_t machineIN(State8080* state, StateSIMachine* machine, uint8_t port) {
 			break;
 		}
 	}
-	return output;
+	state->a = output;
 }
 
 
