@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 		
 		if(getchar()) {
 
-			uint8_t* opCode = state->memory[state->pc];
+			uint8_t* opCode = &state->memory[state->pc];
 
 			if (*opCode == 0xdb) {	// machine IN
 				machineIN(state, machine, opCode[1]);
