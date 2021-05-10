@@ -7,7 +7,7 @@
 #include <stdint.h>
 
 #include "ioPorts.h"
-#include "cpu.h"
+#include "../cpu/cpu.h"
 
 
 /* Reads from the machine ports into the CPU A register*/

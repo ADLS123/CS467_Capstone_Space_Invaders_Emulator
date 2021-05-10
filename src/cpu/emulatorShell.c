@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "helperFunctions.h"
+#include "opcodeFunctions.h"
 #include "cpu.h"
 
 

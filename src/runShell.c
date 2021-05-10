@@ -10,9 +10,9 @@
 
 //#include <iostream>
 
-#include "helperFunctions.h"
-#include "cpu.h"
-#include "ioPorts.h"
+#include "./cpu/opcodeFunctions.h"
+#include "./cpu/cpu.h"
+#include "./machine/ioPorts.h"
 
 
 // Global variable for keeping time

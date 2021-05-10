@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "helperFunctions.h"
+#include "opcodeFunctions.h"
 #include "cpu.h"
 
 #pragma warning (disable: 4996)
@@ -165,7 +165,7 @@ void readInvaderstoMem(State8080* state) {
 	readFiletoMem(state, "./roms/invaders.e", 0x1800);
 }
 
-
+/* Initializes cpu state struct */
 State8080* init8080CPU() {
 	State8080* state = calloc(1, sizeof(State8080));
 	state->memory = calloc(1, 0x10000); //16000 bytes allocated for memory
