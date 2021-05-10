@@ -35,10 +35,6 @@ typedef struct State8080 {
 	uint8_t* memory;
 	struct ConditionCodes cc;
 	uint8_t int_enable;
-
-	uint8_t shiftLo;	// lower order bits shift register
-	uint8_t shiftHi;	// higher order bits shift register
-	uint8_t shiftAmt;	// changed by OUT 2 opcode
 } State8080;
 
 #endif
