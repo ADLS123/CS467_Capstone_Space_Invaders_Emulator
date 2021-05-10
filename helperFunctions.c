@@ -1,6 +1,5 @@
 /**************************************************************************************************
 ** File Name: helperFunctions.c
-** Author(s): Devin Swanson
 ** Description: This file contains the function definitions to encapsulate the work related to 
 		the various flag setting required for the Space Invaders ROM
 **************************************************************************************************/
