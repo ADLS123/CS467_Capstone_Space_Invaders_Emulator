@@ -8,7 +8,7 @@
 
 #include "ioPorts.h"
 
-/* Reads from the machine port into the CPU */
+/* Reads from the machine ports into the CPU */
 uint8_t machineIN(state8080* state, uint8_t port) {
 	uint8_t output = 0;
 	switch (port) {
@@ -23,4 +23,20 @@ uint8_t machineIN(state8080* state, uint8_t port) {
 }
 
 
-uint
+/* Writes out from the CPU to the machine ports */
+void machineOUT(state8080* state, uint8_t port) {
+	switch (port) {
+		case 2:		// write to shift amount from bits 0-2 of A register
+		{
+			// only read bits 0, 1, 2 of A register
+			state->shiftAmt = state->a & 0x07;
+			break;
+		}
+		case 4:		// write to shift registers from A register
+		{
+			shiftLo = shiftHi;
+			shiftHi = state->a;
+			break;
+		}
+	}
+}
