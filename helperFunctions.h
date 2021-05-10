@@ -1,6 +1,5 @@
 /****************************************************************************************
 ** File Name: helperFunctions.h
-** Authors: Devin Swanson, Kevin Zhu
 ** Description: This file contains function declarations for the helper functions for 
 		the Space Invaders ROM
 ****************************************************************************************/
