@@ -1,3 +1,3 @@
 # Type make into the command line to automatically compile all of the files
-program: runShell.c 
-	gcc -o spaceInvaders  ./cpu/emulatorShell.c runShell.c ./cpu/opcodeFunctions.c ./cpu/dissassembler.c ./machine/ioPorts.c
+program: ./src/runShell.c 
+	gcc -o spaceInvaders  ./src/cpu/emulatorShell.c ./src/runShell.c ./src/cpu/opcodeFunctions.c ./src/cpu/dissassembler.c ./src/machine/ioPorts.c
