@@ -159,13 +159,13 @@ void readFiletoMem(State8080* state, char* fileName, uint32_t offset) {
 
 /* Reads the 4 space invaders ROM files into memory */
 void readInvaderstoMem(State8080* state) {
-	readFiletoMem(state, "../roms/invaders.h", 0x0000);
-	readFiletoMem(state, "../roms/invaders.g", 0x0800);
-	readFiletoMem(state, "../roms/invaders.f", 0x1000);
-	readFiletoMem(state, "../roms/invaders.e", 0x1800);
+	readFiletoMem(state, "./roms/invaders.h", 0x0000);
+	readFiletoMem(state, "./roms/invaders.g", 0x0800);
+	readFiletoMem(state, "./roms/invaders.f", 0x1000);
+	readFiletoMem(state, "./roms/invaders.e", 0x1800);
 }
 
-
+/* Initializes cpu state struct */
 State8080* init8080CPU() {
 	State8080* state = calloc(1, sizeof(State8080));
 	state->memory = calloc(1, 0x10000); //16000 bytes allocated for memory
