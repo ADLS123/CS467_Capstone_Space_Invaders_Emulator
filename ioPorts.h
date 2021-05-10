@@ -11,7 +11,6 @@ function prototypes for handling the calls to the machine IO ports.
 #ifndef IOPORTS_H
 #define IOPORTS_H
 
-
 typedef struct StateSIMachine {
 	uint8_t shiftLo;	// lower order bits shift register
 	uint8_t shiftHi;	// higher order bits shift register
@@ -20,5 +19,7 @@ typedef struct StateSIMachine {
 
 
 // function prototypes
-uint8_t machineIN(state8080* state, StateSIMachine* machine, uint8_t port);
-void machineOUT(state8080* state, StateSIMachine* machine, uint8_t port)
+uint8_t machineIN(State8080* state, StateSIMachine* machine, uint8_t port);
+void machineOUT(State8080* state, StateSIMachine* machine, uint8_t port);
+
+#endif

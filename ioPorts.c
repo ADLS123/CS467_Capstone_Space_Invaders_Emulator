@@ -11,12 +11,12 @@
 
 
 /* Reads from the machine ports into the CPU */
-uint8_t machineIN(state8080* state, StateSIMachine* machine, uint8_t port) {
+uint8_t machineIN(State8080* state, StateSIMachine* machine, uint8_t port) {
 	uint8_t output = 0;
 	switch (port) {
 		case 3:		// read from shift registers based on shiftAmt
 		{
-			uint16_t shiftRegs = (state->shiftHi << 8) | state->shiftLo;
+			uint16_t shiftRegs = (machine->shiftHi << 8) | machine->shiftLo;
 			output = (shiftRegs >> (8 - machine->shiftAmt)) & 0xFF;
 			break;
 		}
@@ -26,7 +26,7 @@ uint8_t machineIN(state8080* state, StateSIMachine* machine, uint8_t port) {
 
 
 /* Writes out from the CPU to the machine ports */
-void machineOUT(state8080* state, StateSIMachine* machine, uint8_t port) {
+void machineOUT(State8080* state, StateSIMachine* machine, uint8_t port) {
 	switch (port) {
 		case 2:		// write to shift amount from bits 0-2 of A register
 		{
@@ -36,7 +36,7 @@ void machineOUT(state8080* state, StateSIMachine* machine, uint8_t port) {
 		}
 		case 4:		// write to shift registers from A register
 		{
-			machine->shiftLo = shiftHi;
+			machine->shiftLo = machine->shiftHi;
 			machine->shiftHi = state->a;
 			break;
 		}
