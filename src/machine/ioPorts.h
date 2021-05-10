@@ -6,7 +6,7 @@ function prototypes for handling the calls to the machine IO ports.
 
 #include <stdlib.h>
 #include <stdint.h>
-#include "cpu.h"
+#include "../cpu/cpu.h"
 
 #ifndef IOPORTS_H
 #define IOPORTS_H
