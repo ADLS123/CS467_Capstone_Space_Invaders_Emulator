@@ -18,6 +18,7 @@
 // Global variable for keeping time
 struct timespec nowTime;
 long lastInterrupt = 0;
+long long nowmsec;
 
 int main(int argc, char** argv) {
 	State8080* state = init8080CPU();
@@ -54,11 +55,11 @@ int main(int argc, char** argv) {
 
 		// trigger interrupt if 1/60 of a second has passed since last interrupt, and interrupts are enabled
 		clock_gettime(CLOCK_REALTIME, &nowTime);
-		if (nowTime.tv_nsec - lastInterrupt > 1000000000. / 60. && state->int_enable) {
+		nowmsec = nowTime.tv_sec * 1000 + nowTime.tv_nsec / 1000000;
+		if ((float)(nowmsec - lastInterrupt) > 16.67 && state->int_enable) {
 			generateInterrupt(state, 2);
 			lastInterrupt = nowTime.tv_nsec;
 		}
-
 	}
 	return 0;
 }
