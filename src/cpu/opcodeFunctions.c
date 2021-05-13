@@ -87,6 +87,15 @@ void inxFunc(uint8_t* hi, uint8_t* lo) {
 }
 
 
+// Helper function for DCXopcode, decrements 2 register integer
+void dcxFunc(uint8_t* hi, uint8_t* lo) {
+	uint16_t temp = ((uint16_t)*hi << 8) | *lo;
+	temp--;
+	*hi = (temp >> 8) & 0xFF;
+	*lo = temp & 0xFF;
+}
+
+
 /* Helper function for CALL instructions */
 void callFunc(State8080* state, uint16_t callAddr) {
 	// set return address based on how long the instruction is

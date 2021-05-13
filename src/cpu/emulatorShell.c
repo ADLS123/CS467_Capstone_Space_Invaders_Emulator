@@ -934,7 +934,7 @@ void emulate8080(State8080* state) {
 		}
 			break;
 				/*--------------------------------*/
-		/* INX instructions, Flags are not affected: Register  + 1 */
+		/* INX instructions, Flags are not affected: 2 Registers + 1 */
 		case 0x03: //INX B
 		{
 			inxFunc(&state->b, &state->c);
@@ -952,33 +952,28 @@ void emulate8080(State8080* state) {
 		}
 		case 0x33: //INX SP
 		{
-			uint16_t value = (uint16_t) state->sp + 1;     
-            state->sp = value & 0xff;  
+			state->sp++;
 			break; 
 		}
-		/* DCX instructions, Flags are not affected: Register  - 1 */
+		/* DCX instructions, Flags are not affected: 2 Register - 1 */
 		case 0x0b: //DCX B
 		{
-			uint16_t value = (uint16_t) state->b - 1;     
-            state->b = value & 0xff;  
+			dcxFunc(&state->b, &state->c);
 			break;
 		}
 		case 0x1b: //DCX D
 		{
-			uint16_t value = (uint16_t) state->d - 1;     
-            state->d = value & 0xff;  
+			dcxFunc(&state->d, &state->e);
 			break;
 		}
 		case 0x2b: //DCX H
 		{
-			uint16_t value = (uint16_t) state->h - 1;     
-            state->h = value & 0xff;  
+			dcxFunc(&state->h, &state->l);
 			break;
 		}
 		case 0x3b: //DCX SP
-		{
-			uint16_t value = (uint16_t) state->sp - 1;     
-            state->sp = value & 0xff;  
+		{     
+            state->sp--;  
 			break;
 		}
 		/* INR instructions, Flags are affected: Register  + 1 */
