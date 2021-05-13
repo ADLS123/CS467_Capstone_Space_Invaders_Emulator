@@ -1130,30 +1130,29 @@ void emulate8080(State8080* state) {
 		case 0x09: //DAD B- Register B is pairs b-c
 		{
 			uint16_t hl = (state->h << 8) | state->l;
-			uint16_t B = (state->b << 8) | state->c; 
-			uint16_t value = hl + B;
+			uint16_t bc = (state->b << 8) | state->c; 
+			uint16_t value = hl + bc;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
 			state->cc.p = setCarry((value >> 8));  
               
 			break;
 		}
-		case 0x19: //DAD H - Register D is pair d-e
+		case 0x19: //DAD D - Register D is pair d-e
 		{
 			uint16_t hl = (state->h << 8) | state->l;
-			uint16_t D = (state->d << 8) | state->e; 
-			uint16_t value = hl + D;
+			uint16_t de = (state->d << 8) | state->e; 
+			uint16_t value = hl + de;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
 			state->cc.p = setCarry((value >> 8));  
               
 			break;
 		}
-		case 0x29: //DAD D - Register D is pair d-e
+		case 0x29: //DAD H - Register H is pair h-l
 		{
 			uint16_t hl = (state->h << 8) | state->l;
-			uint16_t H = (state->h << 8) | state->l; 
-			uint16_t value = hl + H;
+			uint16_t value = hl + hl;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
 			state->cc.p = setCarry((value >> 8));  
