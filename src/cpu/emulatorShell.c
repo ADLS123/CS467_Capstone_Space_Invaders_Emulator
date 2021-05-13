@@ -937,20 +937,17 @@ void emulate8080(State8080* state) {
 		/* INX instructions, Flags are not affected: Register  + 1 */
 		case 0x03: //INX B
 		{
-			uint16_t value = (uint16_t) state->b + 1;     
-            state->b = value & 0xff;  
+			inxFunc(&state->b, &state->c);
 			break; 
 		}
 		case 0x13: //INX D
 		{
-			uint16_t value = (uint16_t) state->d + 1;     
-            state->d = value & 0xff;  
+			inxFunc(&state->d, &state->e);
 			break; 
 		}
 		case 0x23: //INX H
 		{
-			uint16_t value = (uint16_t) state->h + 1;     
-            state->h = value & 0xff;  
+			inxFunc(&state->h, &state->l);
 			break; 
 		}
 		case 0x33: //INX SP

@@ -1,5 +1,5 @@
 /**************************************************************************************************
-** File Name: helperFunctions.c
+** File Name: opcodeFunctions.c
 ** Description: This file contains the function definitions to encapsulate the work related to 
 		the various flag setting required for the Space Invaders ROM
 **************************************************************************************************/
@@ -73,6 +73,17 @@ int setDoubleCarry(int value) {
 //function for setting the zero flag based off of a parameter value
 int zero(int value) {
 	return (value == 0);
+}
+
+
+/* Arithmetic Group helper functions*/
+
+// Helper function for INX opcode, increments 2 register integer 
+void inxFunc(uint8_t* hi, uint8_t* lo) {
+	uint16_t temp = ((uint16_t)*hi << 8) | *lo;
+	temp++;
+	*hi = (temp >> 8) & 0xFF;
+	*lo = temp & 0xFF;
 }
 
 
@@ -180,6 +191,8 @@ void generateInterrupt(State8080* state, int interruptNum) {
 	callFunc(state, callAddr);
 	state->pc++;
 }
+
+
 
 
 /*
