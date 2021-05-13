@@ -178,6 +178,7 @@ void generateInterrupt(State8080* state, int interruptNum) {
 	// call address is 8 * interrupt number
 	uint16_t callAddr = interruptNum * 0x08;
 	callFunc(state, callAddr);
+	state->pc++;
 }
 
 
