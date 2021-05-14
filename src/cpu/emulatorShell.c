@@ -1458,9 +1458,9 @@ void emulate8080(State8080* state) {
 		/* ACI Add Immediate to Accumulator minus carry instructions */
 		case 0xce:      //ACI + Byte
 		{
-            uint16_t value = (uint16_t) state->a + (uint16_t) opCode[1] + (uint16_t)state->cc.cy;    
-            setLogicFlagsA(state); 
+            uint16_t value = (uint16_t) state->a + (uint16_t) opCode[1] + (uint16_t)state->cc.cy;  
 			state->a = value & 0xff;
+            setLogicFlagsA(state); 
 			state->cc.cy = setCarry(value);    
 			state->pc++;
 			break;

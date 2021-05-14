@@ -26,14 +26,22 @@ void loadTestAsm(State8080* state) {
 
 
 // Modified CALL function to work with diagnostic code taken from emulator101.com
-void debugCALL(State8080* state) {
+// returns 1 when succeed message is printed
+int debugCALL(State8080* state) {
 	unsigned char* opCode = &state->memory[state->pc];
+	// track whether an error message was printed
+	int succeed = 0;
 	// likely that the original OS has code at address $0005 that prints messages to console
 	if (5 == ((opCode[2] << 8) | opCode[1])) {
 		if (state->c == 9) {
 			uint16_t offset = (state->d << 8) | (state->e);
 			// skip prefix bytes
 			char* str = &state->memory[offset + 3];  
+
+			// 6th character of success message is 'I'
+			if (str[5] == 'I') {
+				succeed = 1;
+			}
 
 			while (*str != '$') {
 				printf("%c", *str++);
@@ -47,9 +55,12 @@ void debugCALL(State8080* state) {
 		else if (state->c == 0) {
 			return 0;
 		}
+		state->pc += 3;
 	}
 	else {
-		callFunc(state, ((opCode[2] << 8) | opCode[1]));
+		callFunc(state, UINT16_MAX);
 		state->pc++;
 	}
+
+	return succeed;
 }

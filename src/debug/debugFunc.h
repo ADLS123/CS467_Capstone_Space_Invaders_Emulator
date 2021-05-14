@@ -12,6 +12,8 @@
 Taken from emulator101.com */
 void loadTestAsm(State8080* state);
 // Modified CALL function to work with diagnostic code taken from emulator101.com
-void debugCALL(State8080* state);
+int debugCALL(State8080* state);
+// Call Test function from TestAsm.c
+int beginTest(int argc, char** argv);
 
 #endif

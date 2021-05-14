@@ -11,10 +11,14 @@
 #include "debugFunc.h"
 
 
-int beginDebug(int argc, char** argv) {
+int beginTest(int argc, char** argv) {
 	State8080* state = init8080CPU();
 	StateSIMachine* machine = initSIMachine();
 	loadTestAsm(state);
+
+	// track whether the test has failed
+	// based on printed message
+	int succeed = 0;
 
 	while (1) {
 
@@ -31,7 +35,7 @@ int beginDebug(int argc, char** argv) {
 				state->pc++;
 			}
 			else if (*opCode == 0xcd) {
-				debugCALL(state);
+				succeed = debugCALL(state);
 				extractOpCode(state->memory, state->pc);
 				printf("OP Current: %x\nPC: %x\nSP: %x\n", state->memory[state->pc], state->pc, state->sp);
 				printf("Registers:  A: %x B: %x C: %x D: %x E: %x H: %x L: %x \n", state->a, state->b, state->c, state->d, state->e, state->h, state->l);
@@ -45,14 +49,18 @@ int beginDebug(int argc, char** argv) {
 				printf("---------------------\n");
 			}
 
+			// if system jumps back to 00, that means result has been reached
+			if (*opCode == 0xc3 && opCode[1] == 0x00 && opCode[2] == 0x00) {
+				
+				// if error was printed, exit with status 1, else break and return with status 0
+				if (succeed != 1) {
+					exit(EXIT_FAILURE);
+				}
+				else {
+					break;
+				}
 
-		// trigger interrupt if 1/60 of a second has passed since last interrupt, and interrupts are enabled
-		//clock_gettime(CLOCK_REALTIME, &nowTime);
-		//nowmsec = nowTime.tv_sec * 1000 + nowTime.tv_nsec / 1000000;
-		//if ((float)(nowmsec - lastInterrupt) > 16.67 && state->int_enable) {
-		//	generateInterrupt(state, 2);
-		//	lastInterrupt = nowTime.tv_nsec;
-		//}
+			}
 	}
 	return 0;
 }
