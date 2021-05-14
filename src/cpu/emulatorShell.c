@@ -1449,9 +1449,8 @@ void emulate8080(State8080* state) {
 		case 0xc6:      //ADI + Byte
 		{
             uint16_t value = (uint16_t)state->a + (uint16_t)opCode[1];   
-			
-            setLogicFlagsA(state); 
 			state->a = value & 0xff;
+            setLogicFlagsA(state); 
 			state->cc.cy = setCarry(value);   
 			state->pc++;
 			break;
