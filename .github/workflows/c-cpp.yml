@@ -1,3 +1,4 @@
+
 name: C/C++ CI
 
 on:
@@ -13,8 +14,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: make
+    - name: make normal
       run: make
+    - name: make test
+      run: make -f maketest
+    - name: run test
+      run: ./spaceInvadersTest
    # - name: make check
     #  run: make check
     #- name: make distcheck
