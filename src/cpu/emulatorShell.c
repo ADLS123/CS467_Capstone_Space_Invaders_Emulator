@@ -52,8 +52,8 @@ void emulate8080(State8080* state) {
 		case 0xa6: // ANA M
 			{	//how to handle the hl register came from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
 				uint16_t offset = (state->h << 8) | state->l;
-				uint8_t hlVal = state->memory[offset];
-				state->a = state->a & hlVal;
+				uint8_t mVal = state->memory[offset];
+				state->a = state->a & mVal;
 				setLogicFlagsA(state);
 			}
 			break;
@@ -89,8 +89,8 @@ void emulate8080(State8080* state) {
 		case 0xae: // XRA M
 		{	//how to handle the hl register came from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
 			uint16_t offset = (state->h << 8) | state->l;
-			uint8_t hlVal = state->memory[offset];
-			state->a = state->a ^ hlVal;
+			uint8_t mVal = state->memory[offset];
+			state->a = state->a ^ mVal;
 			setLogicFlagsA(state);
 		}
 			break;
@@ -126,8 +126,8 @@ void emulate8080(State8080* state) {
 		case 0xb6: // ORA M
 		{
 			uint16_t offset = (state->h << 8) | state->l;
-			uint8_t hlVal = state->memory[offset];
-			state->a = state->a | hlVal;
+			uint8_t mVal = state->memory[offset];
+			state->a = state->a | mVal;
 			setLogicFlagsA(state);
 		}
 			break;
@@ -187,11 +187,11 @@ void emulate8080(State8080* state) {
 		case 0xbe: // CMP M
 		{
 			uint16_t offset = (state->h << 8) | state->l;
-			uint8_t hlVal = state->memory[offset];
-			uint8_t value = state->a - hlVal;
+			uint8_t mVal = state->memory[offset];
+			uint8_t value = state->a - mVal;
 			state->cc.z = zero(value);
 			state->cc.p = parity(value);
-			state->cc.cy = (state->a < hlVal);
+			state->cc.cy = (state->a < mVal);
 		}
 			break;
 		case 0xbf: // CMP A
@@ -1038,7 +1038,8 @@ void emulate8080(State8080* state) {
 		case 0x34: //INR M
 		{
 			uint16_t offset = (state->h << 8) | state->l;
-			uint16_t value = offset + 1;    
+			uint16_t mVal = state->memory[offset];
+			uint16_t value = mVal + 1;    
             state->cc.z = zero(value);   
             state->cc.s = logicSetSign(value);     
             state->cc.p = parity(value);   
@@ -1114,7 +1115,8 @@ void emulate8080(State8080* state) {
 		case 0x35: //DCR M
 		{
 			uint16_t offset = (state->h << 8) | state->l;
-			uint16_t value = offset - 1;    
+			uint16_t mVal = state->memory[offset];
+			uint16_t value = mVal - 1;    
             state->cc.z = zero(value);   
             state->cc.s = logicSetSign(value);     
             state->cc.p = parity(value);   
@@ -1225,8 +1227,8 @@ void emulate8080(State8080* state) {
 		case 0x86:      //ADD M 
 		{       
 			uint16_t offset = (state->h << 8) | state->l;
-			uint16_t hlVal = state->memory[offset];
-            uint16_t value = (uint16_t) state->a + hlVal;    
+			uint16_t mVal = state->memory[offset];
+            uint16_t value = (uint16_t) state->a + mVal;    
 			state->a = value & 0xff;
             setLogicFlagsA(state); 
 			state->cc.cy = setCarry(value);  
@@ -1292,8 +1294,8 @@ void emulate8080(State8080* state) {
 		case 0x8e:      //ADC M 
 		{    
 			uint16_t offset = (state->h << 8) | state->l;
-			uint16_t hlVal = state->memory[offset];
-            uint16_t value = (uint16_t) state->a + hlVal + (uint16_t)state->cc.cy;    
+			uint16_t mVal = state->memory[offset];
+            uint16_t value = (uint16_t) state->a + mVal + (uint16_t)state->cc.cy;    
 			state->a = value & 0xff;
             setLogicFlagsA(state); 
 			state->cc.cy = setCarry(value);   
@@ -1359,8 +1361,8 @@ void emulate8080(State8080* state) {
 		case 0x96:      //SUB M
 		{
 			uint16_t offset = (state->h << 8) | state->l;
-			uint16_t hlVal = state->memory[offset];
-            uint16_t value = (uint16_t) state->a - hlVal;
+			uint16_t mVal = state->memory[offset];
+            uint16_t value = (uint16_t) state->a - mVal;
 			state->a = value & 0xff;
             setLogicFlagsA(state); 
 			state->cc.cy = setCarry(value);    
@@ -1426,8 +1428,8 @@ void emulate8080(State8080* state) {
 		case 0x9e:      //SBB M
 		{
 			uint16_t offset = (state->h << 8) | state->l;
-			uint16_t hlVal = state->memory[offset];
-            uint16_t value = (uint16_t) state->a - hlVal - (uint16_t)state->cc.cy;
+			uint16_t mVal = state->memory[offset];
+            uint16_t value = (uint16_t) state->a - mVal - (uint16_t)state->cc.cy;
 			state->a = value & 0xff;
             setLogicFlagsA(state); 
 			state->cc.cy = setCarry(value);  
