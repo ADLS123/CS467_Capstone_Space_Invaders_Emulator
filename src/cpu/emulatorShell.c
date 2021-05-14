@@ -1135,43 +1135,43 @@ void emulate8080(State8080* state) {
 		/* DAD instructions,Only carry flag is affected*/
 		case 0x09: //DAD B- Register B is pairs b-c
 		{
-			uint16_t hl = (state->h << 8) | state->l;
-			uint16_t bc = (state->b << 8) | state->c; 
-			uint16_t value = hl + bc;
+			uint32_t hl = (state->h << 8) | state->l;
+			uint32_t bc = (state->b << 8) | state->c; 
+			uint32_t value = hl + bc;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
-			state->cc.p = setCarry((value >> 8));  
+			state->cc.p = setDoubleCarry(value);  
               
 			break;
 		}
 		case 0x19: //DAD D - Register D is pair d-e
 		{
-			uint16_t hl = (state->h << 8) | state->l;
-			uint16_t de = (state->d << 8) | state->e; 
-			uint16_t value = hl + de;
+			uint32_t hl = (state->h << 8) | state->l;
+			uint32_t de = (state->d << 8) | state->e; 
+			uint32_t value = hl + de;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
-			state->cc.p = setCarry((value >> 8));  
+			state->cc.p = setDoubleCarry(value);  
               
 			break;
 		}
 		case 0x29: //DAD H - Register H is pair h-l
 		{
-			uint16_t hl = (state->h << 8) | state->l;
-			uint16_t value = hl + hl;
+			uint32_t hl = (state->h << 8) | state->l;
+			uint32_t value = hl + hl;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
-			state->cc.p = setCarry((value >> 8));  
+			state->cc.p = setDoubleCarry(value);  
               
 			break;
 		}
 		case 0x39: //DAD SP 
 		{
-			uint16_t hl = (state->h << 8) | state->l;
-			uint16_t value = hl + state->sp;
+			uint32_t hl = (state->h << 8) | state->l;
+			uint32_t value = hl + state->sp;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
-			state->cc.p = setCarry((value >> 8));  
+			state->cc.p = setDoubleCarry(value);  
               
 			break;
 		}
