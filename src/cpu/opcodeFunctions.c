@@ -190,6 +190,7 @@ void readInvaderstoMem(State8080* state) {
 State8080* init8080CPU() {
 	State8080* state = calloc(1, sizeof(State8080));
 	state->memory = calloc(1, 0x10000); //16000 bytes allocated for memory
+	state->pc = 0;
 	return state;
 }
 
