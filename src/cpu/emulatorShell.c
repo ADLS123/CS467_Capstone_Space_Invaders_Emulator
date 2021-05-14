@@ -651,6 +651,8 @@ void emulate8080(State8080* state) {
 		case 0xe9: // PCHL 
 		{
 			uint16_t offset = (state->h << 8) | state->l;
+			// decrement offset to account for pc increment at end of function
+			offset--; 
 			state->pc = offset;
 		}
 			break;
