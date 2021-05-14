@@ -206,8 +206,8 @@ void emulate8080(State8080* state) {
 		case 0x07: // RLC
 		{
 			uint8_t value = state->a;
-			state->a = (value >> 7) | (value << 1);
-			state->cc.cy = (128 == (value & 128));	//sets carry to high order bit
+			state->a = (value << 1) | (value >> 7);
+			state->cc.cy = (1 == (value >> 7));	//sets carry to highest order bit
 		}
 			break;
 		/* RRC instructions */
@@ -215,16 +215,16 @@ void emulate8080(State8080* state) {
 		case 0x0f: // RRC 
 		{
 			uint8_t value = state->a;
-			state->a = ((value & 1) << 7) | (value >> 1);
-			state->cc.cy = (1 == (value & 1));		//sets carry bit to low order bit
+			state->a = (value << 7) | (value >> 1);
+			state->cc.cy = (1 == (value & 1));		//sets carry bit to lowest order bit
 		}
 			break;
 		/* RAL instructions */
 		case 0x17: // RAL
 		{
 			uint8_t value = state->a;
-			state->a = (state->cc.cy) | (value << 1);
-			state->cc.cy = (1 == (value & 1));
+			state->a = (value << 1) | (state->cc.cy);
+			state->cc.cy = (1 == (value >> 7));
 		}
 			break;
 		/* RAR instructions */
