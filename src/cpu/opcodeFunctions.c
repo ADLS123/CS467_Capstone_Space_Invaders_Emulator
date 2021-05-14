@@ -106,6 +106,7 @@ void callFunc(State8080* state, uint16_t callAddr) {
 	uint16_t retAddr = state->pc + pcIncr;
 	state->memory[state->sp - 1] = (retAddr >> 8) & 0xff;
 	state->memory[state->sp - 2] = retAddr & 0xff;
+	state->sp -= 2;
 
 	// if no address is specified, UINT16_MAX used for no specific address
 	if (callAddr == UINT16_MAX) {
