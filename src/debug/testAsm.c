@@ -11,7 +11,7 @@
 #include "debugFunc.h"
 
 
-int main(int argc, char** argv) {
+int beginDebug(int argc, char** argv) {
 	State8080* state = init8080CPU();
 	StateSIMachine* machine = initSIMachine();
 	loadTestAsm(state);

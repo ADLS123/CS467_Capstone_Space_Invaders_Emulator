@@ -25,7 +25,6 @@ int main(int argc, char** argv) {
 	StateSIMachine* machine = initSIMachine();
 	readInvaderstoMem(state);
 	
-	
 	printf("Press enter whenever you want to load the next instruction\n");
 
 	while (1) {
