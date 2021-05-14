@@ -1140,7 +1140,7 @@ void emulate8080(State8080* state) {
 			uint32_t value = hl + bc;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
-			state->cc.p = setDoubleCarry(value);  
+			state->cc.cy = setDoubleCarry(value);  
               
 			break;
 		}
@@ -1151,7 +1151,7 @@ void emulate8080(State8080* state) {
 			uint32_t value = hl + de;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
-			state->cc.p = setDoubleCarry(value);  
+			state->cc.cy = setDoubleCarry(value);  
               
 			break;
 		}
@@ -1161,7 +1161,7 @@ void emulate8080(State8080* state) {
 			uint32_t value = hl + hl;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
-			state->cc.p = setDoubleCarry(value);  
+			state->cc.cy = setDoubleCarry(value);  
               
 			break;
 		}
@@ -1171,7 +1171,7 @@ void emulate8080(State8080* state) {
 			uint32_t value = hl + state->sp;
 			state->l = value & 0xff;
 			state->h = (value >> 8) & 0xff;   
-			state->cc.p = setDoubleCarry(value);  
+			state->cc.cy = setDoubleCarry(value);  
               
 			break;
 		}
