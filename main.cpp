@@ -1,12 +1,15 @@
-#include "mainwindow.h"
-#include "disassembler.h"
-#include <QApplication>
-
+/**************************************************************************************************
+ ** File Name: main.cpp
+ ** Description: Temporary main file to try to get video emulation to work
+***************************************************************************************************/
+#include "src/gui/gui.h"
+#include "src/cpu/QCpu.h"
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.createWindowTitle();
-    w.show();
+    Gui window;
+    window.show();
     return a.exec();
+
+
 }
