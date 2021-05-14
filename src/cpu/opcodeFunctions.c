@@ -1,5 +1,5 @@
 /**************************************************************************************************
-** File Name: helperFunctions.c
+** File Name: opcodeFunctions.c
 ** Description: This file contains the function definitions to encapsulate the work related to 
 		the various flag setting required for the Space Invaders ROM
 **************************************************************************************************/
@@ -76,6 +76,26 @@ int zero(int value) {
 }
 
 
+/* Arithmetic Group helper functions*/
+
+// Helper function for INX opcode, increments 2 register integer 
+void inxFunc(uint8_t* hi, uint8_t* lo) {
+	uint16_t temp = ((uint16_t)*hi << 8) | *lo;
+	temp++;
+	*hi = (temp >> 8) & 0xFF;
+	*lo = temp & 0xFF;
+}
+
+
+// Helper function for DCXopcode, decrements 2 register integer
+void dcxFunc(uint8_t* hi, uint8_t* lo) {
+	uint16_t temp = ((uint16_t)*hi << 8) | *lo;
+	temp--;
+	*hi = (temp >> 8) & 0xFF;
+	*lo = temp & 0xFF;
+}
+
+
 /* Helper function for CALL instructions */
 void callFunc(State8080* state, uint16_t callAddr) {
 	// set return address based on how long the instruction is
@@ -86,6 +106,7 @@ void callFunc(State8080* state, uint16_t callAddr) {
 	uint16_t retAddr = state->pc + pcIncr;
 	state->memory[state->sp - 1] = (retAddr >> 8) & 0xff;
 	state->memory[state->sp - 2] = retAddr & 0xff;
+	state->sp -= 2;
 
 	// if no address is specified, UINT16_MAX used for no specific address
 	if (callAddr == UINT16_MAX) {
@@ -169,6 +190,7 @@ void readInvaderstoMem(State8080* state) {
 State8080* init8080CPU() {
 	State8080* state = calloc(1, sizeof(State8080));
 	state->memory = calloc(1, 0x10000); //16000 bytes allocated for memory
+	state->pc = 0;
 	return state;
 }
 
@@ -178,7 +200,10 @@ void generateInterrupt(State8080* state, int interruptNum) {
 	// call address is 8 * interrupt number
 	uint16_t callAddr = interruptNum * 0x08;
 	callFunc(state, callAddr);
+	state->pc++;
 }
+
+
 
 
 /*
