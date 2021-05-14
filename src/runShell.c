@@ -14,6 +14,13 @@
 #include "./cpu/cpu.h"
 #include "./machine/ioPorts.h"
 
+#include "./debug/debugFunc.h"
+
+
+#ifndef TEST
+#define TEST 0
+#endif
+
 
 // Global variable for keeping time
 struct timespec nowTime;
@@ -21,6 +28,14 @@ long lastInterrupt = 0;
 long long nowmsec;
 
 int main(int argc, char** argv) {
+
+	// if test is specified 
+	if (TEST == 1) {
+		beginTest(argc, argv);
+		return 0;
+	}
+
+
 	State8080* state = init8080CPU();
 	StateSIMachine* machine = initSIMachine();
 	readInvaderstoMem(state);
