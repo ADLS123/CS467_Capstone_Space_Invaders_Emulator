@@ -51,8 +51,9 @@ void emulate8080(State8080* state) {
 			break;
 		case 0xa6: // ANA M
 			{	//how to handle the hl register came from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
-				uint32_t hl = (state->h << 8) | state->l;
-				state->a = state->a & hl;
+				uint16_t offset = (state->h << 8) | state->l;
+				uint8_t hlVal = state->memory[offset];
+				state->a = state->a & hlVal;
 				setLogicFlagsA(state);
 			}
 			break;
@@ -87,8 +88,9 @@ void emulate8080(State8080* state) {
 			break;
 		case 0xae: // XRA M
 		{	//how to handle the hl register came from URL: https://github.com/kpmiller/emulator101/blob/master/8080emu-first50.c
-			uint32_t hl = (state->h << 8) | state->l;
-			state->a = state->a ^ hl;
+			uint16_t offset = (state->h << 8) | state->l;
+			uint8_t hlVal = state->memory[offset];
+			state->a = state->a ^ hlVal;
 			setLogicFlagsA(state);
 		}
 			break;
@@ -123,8 +125,9 @@ void emulate8080(State8080* state) {
 			break;
 		case 0xb6: // ORA M
 		{
-			uint32_t hl = (state->h << 8) | state->l;
-			state->a = state->a | hl;
+			uint16_t offset = (state->h << 8) | state->l;
+			uint8_t hlVal = state->memory[offset];
+			state->a = state->a | hlVal;
 			setLogicFlagsA(state);
 		}
 			break;
@@ -183,11 +186,12 @@ void emulate8080(State8080* state) {
 			break;
 		case 0xbe: // CMP M
 		{
-			uint32_t hl = (state->h << 8) | state->l;
-			uint8_t value = state->a - hl;
+			uint16_t offset = (state->h << 8) | state->l;
+			uint8_t hlVal = state->memory[offset];
+			uint8_t value = state->a - hlVal;
 			state->cc.z = zero(value);
 			state->cc.p = parity(value);
-			state->cc.cy = (state->a < hl);
+			state->cc.cy = (state->a < hlVal);
 		}
 			break;
 		case 0xbf: // CMP A
