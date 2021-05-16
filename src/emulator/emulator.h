@@ -20,8 +20,9 @@ class Emulator : public QThread
 {
   Q_OBJECT
 public:
-    Emulator();
+    explicit Emulator();
     Qcpu* cpu;
+    void run();
 private:
     QImage originalScreen;                  //screen prior to rotation
     QImage rotatedScreen;                   //screen the user sees
@@ -29,10 +30,9 @@ private:
 
     void paintScreen();                     //paints the screen each frame
     QColor pixelColor(int pixelPosition);   //function for determining specific pixel color
-    void runEmulator();
 
 signals:
-   void screenIsUpdated(QImage const*);     //signal to notify GUI that screen has changed
+   void screenIsUpdated(const QImage*);     //signal to notify GUI that screen has changed
 
 public slots:
    void inputHandler(const int, bool);      //placeholder slot for keyboard input

@@ -23,6 +23,7 @@ public:
     struct State8080* registers;    //put this in public so there was no need for getters
     void machineIN();               //function for reading inputs
     void machineOUT();              //function for writing to output
+    int emulate8080(State8080* state);
 signals:
     void writeOnPort3(int);         //signal for the write to output port 3
     void writeOnPort5(int);         //signal for the write to output port 5

@@ -26,7 +26,7 @@ private:
     QHBoxLayout* layout;
     QLabel* screen;
 
-    Emulator* emulator;
+    Emulator emulator;
 
 public slots:
     void showScreen(QImage const*);         //slot for showing the screen as it updates

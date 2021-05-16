@@ -6,7 +6,7 @@
 
 #include <QFile>
 #include <QTextStream>
-
+#include <QDebug>
 #include "emulator.h"
 
 #include "../cpu/opcodeFunctions.h"
@@ -30,10 +30,10 @@ Emulator::Emulator(){
  * Description: This function handles the painting of the screen from the video ram.
 **************************************************************************************************/
 void Emulator::paintScreen(){
-    for(int i = 0; i < 224; i++){
-        for(int j = 0; j < 32; j++){
+    for(int i = 0; i < 224; ++i){
+        for(int j = 0; j < 32; ++j){
             uint8_t currentByte = cpu->registers->memory[0x2400 + i * 32 + j];  //sets current mem byte
-            for(int k = 0; k < 8; k++){
+            for(int k = 0; k < 8; ++k){
                 int xPosition = j * 8 + k;
                 int yPosition = i;
 
@@ -98,53 +98,49 @@ void Emulator::playSoundPort5(int){
  * Function Name: void Emulator::runEmulator()
  * Description: This function is responsible for reading the ROM and running the emulator
 **************************************************************************************************/
-void Emulator::runEmulator(){
+void Emulator::run(){
 
     QTextStream out(stdout);
     //NOTE: placeholder reading function until our function is fixed for Qt
-    QFile rom("../../Qt_GUI/roms/invaders");
+    QFile rom("../Qt_GUI/roms/invaders.rom");
     if(!rom.open(QIODevice::ReadOnly)){
-        qFatal("Failed to open rom file\n");
+       // qFatal("Failed to open rom file\n");
+        qDebug() << QString("Failed to open file");
     }
     else{
-        out << "Opened invaders rom\n";
+         qDebug() << QString("opened file");
     }
     //creates Byte array for the data and reads it into the the memory of the cpu
     QByteArray romData = rom.readAll();
+    Q_ASSERT(romData.size() == 0x2000);
 
     for(int i = 0; i < 0x2000; i++){
-        cpu->registers->memory[i] = romData[i];
+        cpu->registers->memory[i] = romData.at(i);
     }
 
 
     //Placeholder function for tracking time until our timing function can be fixed
     int cyclesUntilInterrupt = 1000000;
     bool vBlankOn = true;
-    while (1) {
-
+    while (true) {
+        int cycles = 0;
         uint8_t* opCode = &cpu->registers->memory[cpu->registers->pc];
-        int cycles = *opCode;
-        cyclesUntilInterrupt -= cycles;
-        printf("%d\n", cyclesUntilInterrupt);
+
         if (*opCode == 0xdb) {	// machine IN
             cpu->machineIN();
-            extractOpCode(cpu->registers->memory, cpu->registers->pc);
             cpu->registers->pc += 2;
+            cycles += 10;
         }
         else if (*opCode == 0xd3) { // machine OUT
             cpu->machineOUT();
-            extractOpCode(cpu->registers->memory, cpu->registers->pc);
             cpu->registers->pc += 2;
+            cycles += 10;
         }
         else { // regular 8080 opcodes
-            emulate8080(cpu->registers);
-            extractOpCode(cpu->registers->memory, cpu->registers->pc);
-            //printf("OP Current: %x\nPC: %x\nSP: %x\n", cpu->memory[cpu->pc], cpu->pc, cpu->sp);
-            //printf("Registers:  A: %x B: %x C: %x D: %x E: %x H: %x L: %x \n", cpu->a, cpu->b, cpu->c, cpu->d, cpu->e, cpu->h, cpu->l);
-            printf("---------------------\n");
+            cycles = cpu->emulate8080(cpu->registers);
         }
-
-        if(cyclesUntilInterrupt <= 0 && cpu->registers->int_enable){
+        cyclesUntilInterrupt -= cycles;
+        if(cyclesUntilInterrupt <= 0 && cpu->registers->int_enable == 1){
             if(vBlankOn){
                 generateInterrupt(cpu->registers, 1);
             }
