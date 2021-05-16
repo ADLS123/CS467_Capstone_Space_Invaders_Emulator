@@ -12,9 +12,13 @@
 #include "../cpu/opcodeFunctions.h"
 #include "../cpu/8080State.h"
 #include "../machine/ioPorts.h"
+#include <QtMultimedia/QMediaPlayer>
+
+QMediaPlayer *music = new QMediaPlayer();
+
 
 Emulator::Emulator(){
-
+    music->setMedia(QUrl("qrc:/sounds/fastinvader1.wav"));
     originalScreen = QImage(256, 224, QImage::Format_RGB32);
     transformScreen.rotate(-90);
     transformScreen.scale(2.0, 2.0);
@@ -85,11 +89,27 @@ void Emulator::inputHandler(const int key, bool pressed){
 
 //Placeholder for playing sound on port 3
 void Emulator::playSoundPort3(int){
+    //music->play();
     return;
 }
 
 //Placeholder for playing sound on port 5
 void Emulator::playSoundPort5(int){
+    return;
+}
+
+/**************************************************************************************************
+ * Function Name: resetSound Emulator::resetSound(QMediaPlayer *sound)
+ * Description: This function takes the current sound being played and plays the audio, if the
+ * sound has already been played, the starting point is reset to 0 for it to be played from the beginning.
+**************************************************************************************************/
+void Emulator::resetSound(QMediaPlayer *sound){
+    if(sound->state()== QMediaPlayer::PlayingState){
+        sound->setPosition(0);
+    }
+    else if(sound->state()== QMediaPlayer::StoppedState){
+           sound->play();
+    }
     return;
 }
 
@@ -102,7 +122,7 @@ void Emulator::run(){
 
     QTextStream out(stdout);
     //NOTE: placeholder reading function until our function is fixed for Qt
-    QFile rom("../Qt_GUI/roms/invaders.rom");
+    QFile rom("../Qt_GUI/roms/invaders");
     if(!rom.open(QIODevice::ReadOnly)){
        // qFatal("Failed to open rom file\n");
         qDebug() << QString("Failed to open file");
@@ -123,6 +143,8 @@ void Emulator::run(){
     int cyclesUntilInterrupt = 1000000;
     bool vBlankOn = true;
     while (true) {
+        //resetSound(music);
+        if(getchar()) {
         int cycles = 0;
         uint8_t* opCode = &cpu->registers->memory[cpu->registers->pc];
 
@@ -152,6 +174,7 @@ void Emulator::run(){
             vBlankOn = !vBlankOn;
            cyclesUntilInterrupt = 1000000;
         }
+    } // If Condition
     }
 
 

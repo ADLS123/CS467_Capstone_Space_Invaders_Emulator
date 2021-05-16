@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QDebug>
 #include <QBitMap>
+#include <QtMultimedia/QMediaPlayer>
 
 #include "../cpu/8080State.h"
 #include "../cpu/QCpu.h"
@@ -30,6 +31,7 @@ private:
 
     void paintScreen();                     //paints the screen each frame
     QColor pixelColor(int pixelPosition);   //function for determining specific pixel color
+    void resetSound(QMediaPlayer *music);    // Used to control sound setting
 
 signals:
    void screenIsUpdated(const QImage*);     //signal to notify GUI that screen has changed
