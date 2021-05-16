@@ -18,7 +18,7 @@ QMediaPlayer *music = new QMediaPlayer();
 
 
 Emulator::Emulator(){
-    music->setMedia(QUrl("qrc:/sounds/fastinvader1.wav"));
+
     originalScreen = QImage(256, 224, QImage::Format_RGB32);
     transformScreen.rotate(-90);
     transformScreen.scale(2.0, 2.0);
@@ -88,13 +88,55 @@ void Emulator::inputHandler(const int key, bool pressed){
 }
 
 //Placeholder for playing sound on port 3
-void Emulator::playSoundPort3(int){
-    //music->play();
+void Emulator::playSoundPort3(int raw){
+    // UFO Sound
+    if(raw == 0){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader1.wav"));
+    }
+    // Player Shoots
+    else if(raw == 1){
+        music->setMedia(QUrl("qrc:/sounds/shoot.wav"));
+    }
+    // Player Dies
+    else if(raw == 2){
+        music->setMedia(QUrl("qrc:/sounds/explosion.wav"));
+    }
+    // Invader dies
+    else if(raw == 3){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader4.wav"));
+    }
+
+    // Plays the current sound
+    resetSound(music);
     return;
 }
 
 //Placeholder for playing sound on port 5
-void Emulator::playSoundPort5(int){
+void Emulator::playSoundPort5(int raw){
+    // Fleet movement 1
+    if(raw == 0){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader1.wav"));
+    }
+    // Fleet movement 2
+    else if(raw == 1){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader2.wav"));
+    }
+    // Fleet movement 3
+    else if(raw == 2){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader3.wav"));
+    }
+    // Fleet movement 4
+    else if(raw == 3){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader4.wav"));
+    }
+     //UFO Hit
+    else if(raw == 4){
+        music->setMedia(QUrl("qrc:/sounds/explosion.wav"));
+    }
+
+
+    // Plays the current sound
+    resetSound(music);
     return;
 }
 
@@ -143,10 +185,18 @@ void Emulator::run(){
     int cyclesUntilInterrupt = 1000000;
     bool vBlankOn = true;
     while (true) {
-        //resetSound(music);
+
         if(getchar()) {
         int cycles = 0;
         uint8_t* opCode = &cpu->registers->memory[cpu->registers->pc];
+
+//        if (*opCode == 0) {
+//        playSoundPort5(3);
+//        }
+//        else{
+//            playSoundPort5(2);
+//        }
+//        printf("%x\n", *opCode);
 
         if (*opCode == 0xdb) {	// machine IN
             cpu->machineIN();

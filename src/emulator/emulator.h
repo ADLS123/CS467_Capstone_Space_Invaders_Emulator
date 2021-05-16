@@ -38,8 +38,8 @@ signals:
 
 public slots:
    void inputHandler(const int, bool);      //placeholder slot for keyboard input
-   void playSoundPort3(int);                //placeholder slot for playing sound on port 3
-   void playSoundPort5(int);                //placeholder slot for playing sound on port 5
+   void playSoundPort3(int raw);                //placeholder slot for playing sound on port 3
+   void playSoundPort5(int raw);                //placeholder slot for playing sound on port 5
 };
 
 #endif // EMULATOR_H
