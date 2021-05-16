@@ -26,7 +26,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR}Multimedia)  # Multimedia Package
+
+find_package(Qt${QT_VERSION_MAJOR}Multimedia)  # <-------- This Multimedia
 
 set(PROJECT_SOURCES
     src/cpu/8080State.h
@@ -55,6 +56,7 @@ set(PROJECT_SOURCES
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Qt_GUI
+        MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 else()
@@ -69,4 +71,4 @@ else()
     endif()
 endif()
 
-target_link_libraries(Qt_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Qt_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt5::Multimedia)
