@@ -26,11 +26,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR}Multimedia)  # Multimedia Package
 
 set(PROJECT_SOURCES
     src/cpu/8080State.h
-    src/cpu/opcodeFunctions.h
     src/cpu/opcodeFunctions.C
+    src/cpu/opcodeFunctions.h
     src/cpu/QCpu.h
     src/cpu/QCpu.cpp
     src/emulator/disassembler.C
@@ -45,6 +46,10 @@ set(PROJECT_SOURCES
     mainwindow.cpp
     mainwindow.ui
 
+
+
+    roms/invaders.h
+
     main.cpp
 )
 
@@ -58,7 +63,7 @@ else()
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(Qt_GUI
+        add_executable(Qt_GUI res.qrc   #Adds executable sound
             ${PROJECT_SOURCES}
         )
     endif()
