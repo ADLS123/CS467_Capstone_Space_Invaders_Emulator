@@ -87,7 +87,11 @@ void Emulator::inputHandler(const int key, bool pressed){
     return;
 }
 
-//Placeholder for playing sound on port 3
+/**************************************************************************************************
+ * Function Name: resetSound Emulator::playSoundPort3(int raw)
+ * Description: Plays the appropriate sound file based on the current sound output
+ * opcode sent to port 3.
+**************************************************************************************************/
 void Emulator::playSoundPort3(int raw){
     // UFO Sound
     if(raw == 0){
@@ -111,7 +115,11 @@ void Emulator::playSoundPort3(int raw){
     return;
 }
 
-//Placeholder for playing sound on port 5
+/**************************************************************************************************
+ * Function Name: resetSound Emulator::playSoundPort5(int raw)
+ * Description: Plays the appropriate sound file based on the current sound output
+ * opcode sent to port 5.
+**************************************************************************************************/
 void Emulator::playSoundPort5(int raw){
     // Fleet movement 1
     if(raw == 0){
@@ -133,7 +141,6 @@ void Emulator::playSoundPort5(int raw){
     else if(raw == 4){
         music->setMedia(QUrl("qrc:/sounds/explosion.wav"));
     }
-
 
     // Plays the current sound
     resetSound(music);
