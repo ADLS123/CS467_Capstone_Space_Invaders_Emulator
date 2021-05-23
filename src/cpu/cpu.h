@@ -1,40 +1,147 @@
-/****************************************************************************************
-** File Name: cpu.h
-** Description: This file contains prototypes for structs that define the state of the
-** simulated 8080 cpu.
-****************************************************************************************/
-#include <stdlib.h>
-#include <stdint.h>
+#include <QObject>
+#include <cstring>
+#include "../flags/flags.h"
 
 #ifndef CPU_H
 #define CPU_H
 
-/* Simulates condition codes/flags of 8080 processor */
-typedef struct ConditionCodes {
-	uint8_t	z : 1;
-	uint8_t s : 1;
-	uint8_t	p : 1;
-	uint8_t cy : 1;
-	uint8_t ac : 1;
-	uint8_t pad : 3;
-} ConditionCodes;
 
 
-/* Simulates registers, stack pointer, program counter, etc (overall state)  of 8080 processor */
-typedef struct State8080 {
-	uint8_t a;
-	uint8_t b;
-	uint8_t c;
-	uint8_t d;
-	uint8_t e;
-	uint8_t h;
-	uint8_t l;
+class Cpu : public QObject
+{
+    Q_OBJECT
+public:
+    Cpu();                              //default constructor
+    //registers
+    struct State8080Registers{
+        uint8_t a;
+        uint8_t b;
+        uint8_t c;
+        uint8_t d;
+        uint8_t e;
+        uint8_t h;
+        uint8_t l;
+        uint16_t pc;
+        uint16_t sp;
+    } registers;
 
-	uint16_t sp;
-	uint16_t pc;
-	uint8_t* memory;
-	struct ConditionCodes cc;
-	uint8_t int_enable;
-} State8080;
+    Flags flags;
 
-#endif
+    bool enableInterrupts;
+
+    //inputs and outputs
+    uint8_t input0;
+    uint8_t input1;
+    uint8_t input2;
+    uint8_t input3;
+
+    uint8_t output2;
+    uint8_t output3;
+    uint8_t output4;
+    uint8_t output5;
+    uint8_t output6;
+
+    //memory
+    uint8_t *memory;
+
+    //generateInterrupts function
+    bool generateInterrupt(uint8_t opCode);
+    uint8_t getLowBits(uint8_t value);
+    uint8_t getLowBits(uint16_t value);
+    uint8_t getHighBits(uint8_t value);
+    uint8_t getHighBits(uint16_t value);
+    int addBytes(uint8_t byte, uint8_t byte2, bool carryIn, Flags flagVar);
+
+    //emulating functions
+    int emulateInstruction();
+    int getInstruction(uint8_t);
+
+    //opcode functions
+    //logic op functions
+    int ana(uint8_t secondRegister);
+    int anaM();
+    int xra(uint8_t secondRegister);
+    int xraM();
+    int ora(uint8_t secondRegister);
+    int oraM();
+    int cmp(uint8_t secondRegister);
+    int cmpM();
+    int rlc();
+    int rrc();
+    int ral();
+    int rar();
+    int ani();
+    int cma();
+    int xri();
+    int ori();
+    int cpi();
+    int cmc();
+    int stc();
+    int mov(uint8_t &destination, uint8_t source);
+    int movToM(uint8_t source);
+    int movMTo(uint8_t &destination);
+    int mvi(uint8_t &destination);
+    int mviM();
+    int lxi(uint8_t &nameRegister, uint8_t &nextRegister);
+    int lxiSP();
+    int ldax(uint8_t nameRegister, uint8_t nextRegister);
+    int stax(uint8_t nameRegister, uint8_t nextRegister);
+    int shld();
+    int lhld();
+    int sta();
+    int lda();
+    int pchl();
+    int xchg();
+    int ei();
+    int di();
+    int hlt();
+    int nop();
+
+    //movement and stack op functions
+    int jmp();
+    int conditionalJmp(bool condition);
+    int call();
+    int conditionalCall(bool condition);
+    int rst(uint8_t resetNumber);
+    int ret();
+    int conditionalRet(bool condition);
+    int push(uint8_t nameRegister, uint8_t nextRegister);
+    int pushPSW();
+    int pop(uint8_t &nameRegister, uint8_t &nextRegister);
+    int popPSW();
+    int sphl();
+    int xthl();
+
+    //arithmetic functions
+    int inx(uint8_t &nameRegister, uint8_t &nextRegister);
+    int inxSP();
+    int dcx(uint8_t &nameRegister, uint8_t &nextRegister);
+    int dcxSP();
+    int inr(uint8_t &regName);
+    int inrM();
+    int dcr(uint8_t &regName);
+    int dcrM();
+    int dad(uint8_t nameRegister, uint8_t nextRegister);
+    int dadSP();
+    int add(uint8_t regName);
+    int addM();
+    int adc(uint8_t regName);
+    int adcM();
+    int sub(uint8_t regName);
+    int subM();
+    int sbb(uint8_t regName);
+    int sbbM();
+    int adi();
+    int sui();
+    int aci();
+    int sbi();
+    int in();
+    int out();
+    int daa();
+
+signals:
+    void writeOnPort3(int);
+    void writeOnPort5(int);
+};
+
+#endif // CPU_H
