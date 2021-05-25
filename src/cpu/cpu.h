@@ -28,7 +28,7 @@ public:
     Flags flags;
 
     bool enableInterrupts;
-
+    bool twoPlayer;
     //inputs and outputs
     uint8_t input0;
     uint8_t input1;

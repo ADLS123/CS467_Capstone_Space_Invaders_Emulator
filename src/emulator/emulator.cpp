@@ -62,35 +62,50 @@ QColor Emulator::paintPixel(int pixelPosition){
     }
 }
 
-//placeholders for signals
+//handles the key inputs for player controls
 void Emulator::inputHandler(const int key, bool pressed){
-    uint8_t bits = 0;
+    uint8_t bitsPlayer1 = 0;
+    uint8_t bitsPlayer2 = 0;
     if(key == Qt::Key_A){
-        bits = 1 << 5;          //player 1/2 left bit
+        bitsPlayer1 = 1 << 5;          //player 1/2 left bit
     }
     else if(key == Qt::Key_D){
-        bits = 1 << 6;          //player 1/2 right bit
+        bitsPlayer1 = 1 << 6;          //player 1/2 right bit
     }
-    else if(key == Qt::Key_Enter){
-        bits = 1 << 2;          //player 1 start
+    else if(key == Qt::Key_1){
+        bitsPlayer1 = 1 << 2;          //player 1 start
     }
-    else if(key == Qt::Key_Space){
-        bits = 1 << 1;          //2 player start
+    else if(key == Qt::Key_2){
+        bitsPlayer1 = 1 << 1;          //2 player start
+        cpu.twoPlayer = true;
     }
     else if(key == Qt::Key_W){
-        bits = 1 << 4;          //player 1/2 fire
+        bitsPlayer1 = 1 << 4;          //player 1/2 fire
     }
     else if(key == Qt::Key_C){
-        bits = 1;               //coin button
+        bitsPlayer1 = 1;               //coin button
+    }
+    else if(key == Qt::Key_Right){
+        bitsPlayer2 = 1 << 6;               //player 2 right
+    }
+    else if(key == Qt::Key_Left){
+        bitsPlayer2 = 1 << 5;               //player 2 left
+    }
+    else if(key == Qt::Key_Up){
+        bitsPlayer2 = 1 << 4;               //player 2 fire
     }
 
     if(pressed){
-        cpu.input1 = cpu.input1 | bits;
-        cpu.input2 = cpu.input2 | bits;
+        cpu.input1 = cpu.input1 | bitsPlayer1;
+        if(cpu.twoPlayer){
+            cpu.input2 = cpu.input2 | bitsPlayer2;
+        }
     }
     else{
-        cpu.input1 = cpu.input1  & (bits ^ 0xFF);
-        cpu.input2 = cpu.input2  & (bits ^ 0xFF);
+        cpu.input1 = cpu.input1  & (bitsPlayer1 ^ 0xFF);
+        if(cpu.twoPlayer){
+            cpu.input2 = cpu.input2  & (bitsPlayer2 ^ 0xFF);
+        }
     }
 
 }

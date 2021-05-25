@@ -22,7 +22,7 @@ Cpu::Cpu()
     output6 = 0;
 
     enableInterrupts = false;
-
+    twoPlayer = false;
    memory = new uint8_t[0x4000];
 }
 
