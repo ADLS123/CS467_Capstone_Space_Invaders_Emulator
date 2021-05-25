@@ -29,7 +29,7 @@ signals:
     void screenIsUpdated(QImage const*);
 
 public slots:
-    void inputHandler(const int, bool);
+    void inputHandler(const int key, bool pressed);
     void playSoundPort3(int);
     void playSoundPort5(int);
 };

@@ -5,7 +5,7 @@
 #include <QTime>
 #include "emulator.h"
 
-#define HALF_FRAME 16
+#define HALF_FRAME 9
 #define MAX_CYCLES 1000000;
 
 Emulator::Emulator()
@@ -64,7 +64,35 @@ QColor Emulator::paintPixel(int pixelPosition){
 
 //placeholders for signals
 void Emulator::inputHandler(const int key, bool pressed){
-    return;
+    uint8_t bits = 0;
+    if(key == Qt::Key_A){
+        bits = 1 << 5;          //player 1/2 left bit
+    }
+    else if(key == Qt::Key_D){
+        bits = 1 << 6;          //player 1/2 right bit
+    }
+    else if(key == Qt::Key_Enter){
+        bits = 1 << 2;          //player 1 start
+    }
+    else if(key == Qt::Key_Space){
+        bits = 1 << 1;          //2 player start
+    }
+    else if(key == Qt::Key_W){
+        bits = 1 << 4;          //player 1/2 fire
+    }
+    else if(key == Qt::Key_C){
+        bits = 1;               //coin button
+    }
+
+    if(pressed){
+        cpu.input1 = cpu.input1 | bits;
+        cpu.input2 = cpu.input2 | bits;
+    }
+    else{
+        cpu.input1 = cpu.input1  & (bits ^ 0xFF);
+        cpu.input2 = cpu.input2  & (bits ^ 0xFF);
+    }
+
 }
 
 void Emulator::playSoundPort3(int){
@@ -87,11 +115,12 @@ void Emulator::run(){
     QByteArray romData = rom.readAll();
     Q_ASSERT(romData.size() == 0x2000);
 
+    rom.close();
     for(int i = 0; i < 0x2000; i++){
         cpu.memory[i] = romData.at(i);
     }
 
-    //rom.close();
+
     QElapsedTimer frameTimer;
     int cyclesUntilInterrupt = MAX_CYCLES;
     bool vBlank = true;
@@ -101,9 +130,9 @@ void Emulator::run(){
 
 
             if(cyclesUntilInterrupt <= 0){
-//            if(frameTimer.elapsed() < HALF_FRAME){
-//                continue;
-//            }
+//                if(frameTimer.elapsed() < HALF_FRAME){
+//                    continue;
+//                }
                 bool interruptSuccessful;
                 if(vBlank){
                     interruptSuccessful = cpu.generateInterrupt(0xCF);

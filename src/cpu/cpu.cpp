@@ -43,7 +43,7 @@ uint8_t Cpu::getHighBits(uint16_t value){
 }
 
 
-//
+
 int Cpu::addBytes(uint8_t byte, uint8_t byte2, bool carryIn, Flags flagVar){
     uint8_t carry = carryIn ? flags.testBits(CARRY_BIT) : 0;
 
@@ -670,7 +670,7 @@ int Cpu::out(){
         break;
     case 4:
     {
-        output4 = registers.a;\
+        output4 = registers.a;
         uint8_t offset = output2 & 7;
         uint16_t shiftReg = 0;
         shiftReg >> 8;

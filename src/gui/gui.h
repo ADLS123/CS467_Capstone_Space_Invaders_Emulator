@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QKeyEvent>
 
 #include "../emulator/emulator.h"
 
@@ -26,6 +27,9 @@ public slots:
     void showScreen(QImage const*);
     void closeEvent(QCloseEvent*);
 
+protected:
+    void keyPressEvent(QKeyEvent *);
+    void keyReleaseEvent(QKeyEvent *);
 signals:
     void inputReceived(int, bool);
 };

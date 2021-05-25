@@ -23,3 +23,11 @@ void Gui::closeEvent(QCloseEvent*){
     emulator.terminate();
     emulator.wait();
 }
+
+void Gui::keyPressEvent(QKeyEvent* event){
+    emit inputReceived(event->key(), true);
+}
+
+void Gui::keyReleaseEvent(QKeyEvent* event){
+    emit inputReceived(event->key(), false);
+}
