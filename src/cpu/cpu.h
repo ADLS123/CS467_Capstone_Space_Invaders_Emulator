@@ -1,3 +1,11 @@
+/**************************************************************************************************
+    ** File Name: cpu.h
+    ** Description: This file contains the Class declaration for the Cpu class, one of four classes
+        that make up the Space Invaders Emulator. The Cpu class consists of a State8080Registers
+        struct, a Flags object for the different flags, inputs and outputs, and functions for
+        all of the Assembly instructions required to emulate Space Invaders.
+**************************************************************************************************/
+
 #include <QObject>
 #include <cstring>
 #include "../flags/flags.h"
@@ -12,6 +20,7 @@ class Cpu : public QObject
     Q_OBJECT
 public:
     Cpu();                              //default constructor
+    ~Cpu();                             //deconstructor
     //registers
     struct State8080Registers{
         uint8_t a;
@@ -25,10 +34,10 @@ public:
         uint16_t sp;
     } registers;
 
-    Flags flags;
+    Flags flags;                        //required flags
 
-    bool enableInterrupts;
-    bool twoPlayer;
+    bool enableInterrupts;              //flag for enabling interrupts
+    bool twoPlayer;                     //internal flag for 1 or 2 player game
     //inputs and outputs
     uint8_t input0;
     uint8_t input1;
@@ -140,8 +149,8 @@ public:
     int daa();
 
 signals:
-    void writeOnPort3(int);
-    void writeOnPort5(int);
+    void writeOnPort3(int);                 //used for triggering sounds on port 3
+    void writeOnPort5(int);                 //used for triggering sounds on port 5
 };
 
 #endif // CPU_H

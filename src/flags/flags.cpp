@@ -1,10 +1,26 @@
+/**************************************************************************************************
+    ** File Name: flags.cpp
+    ** Description: This file contains the member function definitions for the Flags class.
+**************************************************************************************************/
+
 #include "flags.h"
 
+/**************************************************************************************************
+    ** Function Name: Flags::Flags()
+    ** Description: Default constructor for an object of the Flags class, initializes the flags
+        by setting them all to 0.
+**************************************************************************************************/
 Flags::Flags()
 {
     conditionBits = EMPTY_FLAG;
 }
 
+
+/**************************************************************************************************
+    ** Function Name: Flags::Flags()
+    ** Description: Default constructor for an object of the Flags class, initializes the flags
+        by setting them all to 0.
+**************************************************************************************************/
 Flags::Flags(uint8_t bits){
     conditionBits = EMPTY_FLAG | bits;
 }

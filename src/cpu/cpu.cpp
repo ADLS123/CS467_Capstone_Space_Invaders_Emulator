@@ -1,7 +1,14 @@
+/**************************************************************************************************
+    ** File Name: cpu.cpp
+    ** Description: Contains the member function definitions for the Cpu Class.
+**************************************************************************************************/
 #include "cpu.h"
 
-#include <QtGlobal>
 
+/**************************************************************************************************
+    ** Function Name: Cpu::Cpu()
+    ** Description: The default constructor for an object of the Cpu class.
+**************************************************************************************************/
 Cpu::Cpu()
 {
     //allocate memory for the registers and condition codes struct
@@ -21,31 +28,81 @@ Cpu::Cpu()
     output5 = 0;
     output6 = 0;
 
-    enableInterrupts = false;
-    twoPlayer = false;
-   memory = new uint8_t[0x4000];
+    enableInterrupts = false;       //disabling interrupts to being
+    twoPlayer = false;              //setting to 1 player
+   memory = new uint8_t[0x4000];    //allocate memory for the RAM
 }
 
+
+/**************************************************************************************************
+    ** Function Name: Cpu::~Cpu()
+    ** Description: Deconstructor for the Cpu class, frees up the memory allocated for the RAM.
+**************************************************************************************************/
+Cpu::~Cpu(){
+    delete[] memory;
+}
+
+
+/**************************************************************************************************
+    ** Function Name: uint8_t Cpu::getLowBits(uint8_t value)
+    ** Arguments: An unsigned 8 bit value
+    ** Returns: The lower 4 bits of the argument value
+    ** Description: This function takes a 8-bit value, ands it with 1111 to get the lower 4 bits
+            of the value.
+**************************************************************************************************/
 uint8_t Cpu::getLowBits(uint8_t value){
     return (value & 0x0F);
 }
 
+
+/**************************************************************************************************
+    ** Function Name: uint8_t Cpu::getLowBits(uint16_t value)
+    ** Arguments: An unsigned 16 bit value
+    ** Returns: The lower 8 bits of the argument value
+    ** Description: This function takes a 8-bit value, ands it with 1111 1111 to get the lower
+        8 bits of the value.
+**************************************************************************************************/
 uint8_t Cpu::getLowBits(uint16_t value){
     return value & 0x00FF;
 }
 
+
+/**************************************************************************************************
+    ** Function Name: uint8_t Cpu::getLowBits(uint8_t value)
+    ** Arguments: An unsigned 8 bit value
+    ** Returns: The higher 4 bits of the argument value
+    ** Description: This function takes a 8-bit value, ands it with 1111 0000 to get the higher
+        4 bits of the value.
+**************************************************************************************************/
 uint8_t Cpu::getHighBits(uint8_t value){
     return (value & 0xF0) >> 4;
 }
 
+
+/**************************************************************************************************
+    ** Function Name: uint8_t Cpu::getLowBits(uint16_t value)
+    ** Arguments: An unsigned 16 bit value
+    ** Returns: The higher 8 bits of the argument value
+    ** Description: This function takes a 16-bit value, ands it with 1111 1111 0000 0000 to get
+        the higher 8 bits of the value.
+**************************************************************************************************/
 uint8_t Cpu::getHighBits(uint16_t value){
     return (value & 0xFF00) >> 8;
 }
 
 
-
+/**************************************************************************************************
+    ** Function Name: int Cpu::addBytes(uint8_t byte, uint8_t byte2, bool carryIn, Flags, flagVar)
+**************************************************************************************************/
 int Cpu::addBytes(uint8_t byte, uint8_t byte2, bool carryIn, Flags flagVar){
-    uint8_t carry = carryIn ? flags.testBits(CARRY_BIT) : 0;
+
+    uint8_t carry;
+    if(carryIn){
+        carry = flags.testBits(CARRY_BIT);
+    }
+    else{
+        carry = 0;
+    }
 
     if(flagVar.testBits(AUX_BIT)){
         uint8_t sum = getLowBits(byte) + getLowBits(byte2) + carry;

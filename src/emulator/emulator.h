@@ -1,3 +1,7 @@
+/**************************************************************************************************
+    ** File Name: emulator.h
+    ** Description: This file contains the Class declaration for the Emulator class.
+**************************************************************************************************/
 #include <QWidget>
 #include <QThread>
 #include <QBitMap>
@@ -16,9 +20,9 @@ public:
 private:
     Cpu cpu;
 
-    QImage originalScreen;
-    QImage rotatedScreen;
-    QTransform transform;
+    QImage originalScreen;          //screen in its original form
+    QImage rotatedScreen;           //screen displayed to the user
+    QTransform transform;           //transformation factor for the screen
 
     void paintScreen();
     QColor paintPixel(int pixelPosition);

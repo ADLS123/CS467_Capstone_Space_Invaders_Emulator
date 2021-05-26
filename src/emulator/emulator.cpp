@@ -67,23 +67,23 @@ void Emulator::inputHandler(const int key, bool pressed){
     uint8_t bitsPlayer1 = 0;
     uint8_t bitsPlayer2 = 0;
     if(key == Qt::Key_A){
-        bitsPlayer1 = 1 << 5;          //player 1/2 left bit
+        bitsPlayer1 = 1 << 5;               //player 1/2 left bit
     }
     else if(key == Qt::Key_D){
-        bitsPlayer1 = 1 << 6;          //player 1/2 right bit
+        bitsPlayer1 = 1 << 6;               //player 1/2 right bit
     }
     else if(key == Qt::Key_1){
-        bitsPlayer1 = 1 << 2;          //player 1 start
+        bitsPlayer1 = 1 << 2;               //player 1 start
     }
     else if(key == Qt::Key_2){
-        bitsPlayer1 = 1 << 1;          //2 player start
+        bitsPlayer1 = 1 << 1;               //2 player start
         cpu.twoPlayer = true;
     }
     else if(key == Qt::Key_W){
-        bitsPlayer1 = 1 << 4;          //player 1/2 fire
+        bitsPlayer1 = 1 << 4;               //player 1/2 fire
     }
     else if(key == Qt::Key_C){
-        bitsPlayer1 = 1;               //coin button
+        bitsPlayer1 = 1;                    //coin button
     }
     else if(key == Qt::Key_Right){
         bitsPlayer2 = 1 << 6;               //player 2 right
