@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QThread>
 #include <QBitMap>
+#include <QtMultimedia/QMediaPlayer>
 
 #include "../cpu/cpu.h"
 
@@ -26,6 +27,7 @@ private:
 
     void paintScreen();
     QColor paintPixel(int pixelPosition);
+    void resetSound(QMediaPlayer *music);    // Used to control sound setting
 
     void run();
 
@@ -34,8 +36,8 @@ signals:
 
 public slots:
     void inputHandler(const int key, bool pressed);
-    void playSoundPort3(int);
-    void playSoundPort5(int);
+    void playSoundPort3(int raw);
+    void playSoundPort5(int raw);
 };
 
 #endif // EMULATOR_H

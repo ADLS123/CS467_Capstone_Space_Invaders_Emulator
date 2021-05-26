@@ -4,12 +4,20 @@
 #include <QBitMap>
 #include <QTime>
 #include "emulator.h"
+#include <QtMultimedia/QMediaPlayer>
+#include <QSoundEffect>
+
+
+QMediaPlayer *music = new QMediaPlayer();
+QSoundEffect effect;
+
 
 #define HALF_FRAME 9
 #define MAX_CYCLES 1000000;
 
 Emulator::Emulator()
 {
+     effect.setVolume(0.25f);
     originalScreen = QImage(256, 224, QImage::Format_RGB32);
     transform.rotate(-90);
     transform.scale(2, 2);
@@ -121,7 +129,7 @@ void Emulator::playSoundPort5(int){
 
 void Emulator::run(){
 
-    QFile rom("../qt_gui2/roms/invaders.rom");
+    QFile rom("../Qt_GUI/roms/invaders.rom");
     if(!rom.open(QIODevice::ReadOnly)){
         qFatal("Falied to open the rom file");
     }
