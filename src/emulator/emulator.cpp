@@ -119,6 +119,11 @@ void Emulator::inputHandler(const int key, bool pressed){
 
 }
 
+/**************************************************************************************************
+ * Function Name: resetSound Emulator::playSoundPort3(int raw)
+ * Description: Plays the appropriate sound file based on the current sound output
+ * opcode sent to port 3.
+**************************************************************************************************/
 void Emulator::playSoundPort3(int raw){
 effect.setLoopCount(1);
     if(raw & 0){
@@ -146,7 +151,11 @@ effect.setLoopCount(1);
 
 
 }
-
+/**************************************************************************************************
+ * Function Name: resetSound Emulator::playSoundPort5(int raw)
+ * Description: Plays the appropriate sound file based on the current sound output
+ * opcode sent to port 5.
+**************************************************************************************************/
 void Emulator::playSoundPort5(int raw){
 
 
@@ -179,6 +188,11 @@ void Emulator::playSoundPort5(int raw){
 
 }
 
+/**************************************************************************************************
+ * Function Name: resetSound Emulator::resetSound(QMediaPlayer *sound)
+ * Description: This function takes the current sound being played and plays the audio, if the
+ * sound has already been played, the starting point is reset to 0 for it to be played from the beginning.
+**************************************************************************************************/
 void Emulator::resetSound(QMediaPlayer *sound){
     if(sound->state()== QMediaPlayer::PlayingState){
         sound->setPosition(0);
