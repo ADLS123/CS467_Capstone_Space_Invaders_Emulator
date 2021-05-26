@@ -137,12 +137,13 @@ effect.setLoopCount(1);
 
     }
 
-     else if((raw >> 2) & 1  && (effect.isPlaying() == false)){
+     else if((raw >> 2) & 1 ){
 
         effect.setSource(QUrl("qrc:/sounds/explosion.wav"));
+        effect.play();
 
     }
-     else if((raw >> 3) & 1  && (effect.isPlaying() == false)){
+     else if((raw >> 3) & 1 ){
 
         effect.setSource(QUrl("qrc:/sounds/invaderkilled.wav"));
         effect.play();
