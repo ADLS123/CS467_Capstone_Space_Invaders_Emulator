@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(qt_gui2 LANGUAGES CXX)
+project(Qt_GUI LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -26,6 +26,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR}Multimedia)  # <-------- This Multimedia
 
 set(PROJECT_SOURCES
         main.cpp
@@ -40,19 +41,19 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(qt_gui2
+    qt_add_executable(Qt_GUI
         ${PROJECT_SOURCES}
     )
 else()
     if(ANDROID)
-        add_library(qt_gui2 SHARED
+        add_library(Qt_GUI SHARED
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(qt_gui2
+        add_executable(Qt_GUI res.qrc
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-target_link_libraries(qt_gui2 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Qt_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt5::Multimedia)
