@@ -17,7 +17,8 @@ QSoundEffect effect;
 
 Emulator::Emulator()
 {
-     effect.setVolume(0.25f);
+    effect.setVolume(0.25f);
+
     originalScreen = QImage(256, 224, QImage::Format_RGB32);
     transform.rotate(-90);
     transform.scale(2, 2);
@@ -118,12 +119,73 @@ void Emulator::inputHandler(const int key, bool pressed){
 
 }
 
-void Emulator::playSoundPort3(int){
-    return;
+void Emulator::playSoundPort3(int raw){
+effect.setLoopCount(1);
+    if(raw & 0){
+        music->setMedia(QUrl("qrc:/sounds/ufo_highpitch.wav"));
+        resetSound(music);
+    }
+
+     else if((raw >> 1) & 1 && (effect.isPlaying() == false)){
+        effect.setSource(QUrl("qrc:/sounds/shoot.wav"));
+        effect.play();
+
+    }
+
+     else if((raw >> 2) & 1  && (effect.isPlaying() == false)){
+
+        effect.setSource(QUrl("qrc:/sounds/explosion.wav"));
+
+    }
+     else if((raw >> 3) & 1  && (effect.isPlaying() == false)){
+
+        effect.setSource(QUrl("qrc:/sounds/invaderkilled.wav"));
+        effect.play();
+
+    }
+
+
 }
 
-void Emulator::playSoundPort5(int){
-    return;
+void Emulator::playSoundPort5(int raw){
+
+
+
+    if(raw & 0){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader1.wav"));
+        resetSound(music);
+    }
+    else if((raw >> 1) & 1){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader2.wav"));
+        resetSound(music);
+
+
+    }
+     else if((raw >> 2) & 1){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader3.wav"));
+        resetSound(music);
+
+    }
+    else if((raw >> 3) & 1){
+        music->setMedia(QUrl("qrc:/sounds/fastinvader4.wav"));
+        resetSound(music);
+
+    }
+    else if((raw >> 4) & 1  && (effect.isPlaying() == false)){
+
+        effect.setSource(QUrl("qrc:/sounds/invaderkilled.wav"));
+        effect.play();
+    }
+
+}
+
+void Emulator::resetSound(QMediaPlayer *sound){
+    if(sound->state()== QMediaPlayer::PlayingState){
+        sound->setPosition(0);
+    }
+    else if(sound->state()== QMediaPlayer::StoppedState){
+           sound->play();
+    }
 }
 
 
