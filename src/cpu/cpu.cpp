@@ -129,6 +129,11 @@ int Cpu::addBytes(uint8_t byte, uint8_t byte2, bool carryIn, Flags flagVar){
 
 //Opcode functions
 
+/*NOTE: The M register is the location in memory pointed to by the combined register HL.
+        For example: If HL = 0xABCD, then the M register would be at memory[0xABCD]
+  */
+
+// Ands 1 register with the A register
 int Cpu::ana(uint8_t secondRegister){
     registers.a = registers.a & secondRegister;
     flags.setBits(CARRY_BIT, false);
@@ -137,6 +142,7 @@ int Cpu::ana(uint8_t secondRegister){
     return 4;
 }
 
+// Ands the M register with the A register
 int Cpu::anaM(){
     uint16_t offset = (registers.h << 8) | registers.l;
     ana(memory[offset]);
@@ -531,6 +537,7 @@ int Cpu::xthl(){
 
 //arithmetic functions
 
+// Increments 16 bit int from 2 registers by 1
 int Cpu::inx(uint8_t &nameRegister, uint8_t &nextRegister){
     uint16_t value = (nameRegister << 8) | nextRegister;
     value++;
@@ -541,12 +548,14 @@ int Cpu::inx(uint8_t &nameRegister, uint8_t &nextRegister){
     return 5;
 }
 
+// Increments SP and PC
 int Cpu::inxSP(){
     registers.sp++;
     registers.pc++;
     return 5;
 }
 
+// Decrements 16 bit int from 2 registers by 1
 int Cpu::dcx(uint8_t &nameRegister, uint8_t &nextRegister){
     uint16_t value = (nameRegister << 8) | nextRegister;
     value--;
@@ -557,12 +566,14 @@ int Cpu::dcx(uint8_t &nameRegister, uint8_t &nextRegister){
     return 5;
 }
 
+// Decrements SP and PC
 int Cpu::dcxSP(){
     registers.sp--;
     registers.pc++;
     return 5;
 }
 
+// Increments an 8 bit int (usually 1 register) by 1, sets flags
 int Cpu::inr(uint8_t &regName){
     Flags calcFlags(SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
     regName = addBytes(regName, 1, false, calcFlags);
@@ -570,23 +581,27 @@ int Cpu::inr(uint8_t &regName){
     return 5;
 }
 
+// INR on the M register
 int Cpu::inrM(){
     uint16_t offset = (registers.h << 8) | registers.l;
     return inr(memory[offset]);
 
 }
 
+// Decrements an 8 bit int (1 register) by 1, sets flags
 int Cpu::dcr(uint8_t &regName){
     regName = addBytes(regName, -1, false, SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
     registers.pc++;
     return 5;
 }
 
+// DCR on the M register
 int Cpu::dcrM(){
     uint16_t offset = (registers.h << 8) | registers.l;
     return dcr(memory[offset]);
 }
 
+// Adds two 16 bit ints together (2 register + 2 register), sets carry flag
 int Cpu::dad(uint8_t nameRegister, uint8_t nextRegister){
     uint16_t hl = (registers.h << 8) | registers.l;
     uint16_t value = (nameRegister << 8) | nextRegister;
@@ -601,6 +616,7 @@ int Cpu::dad(uint8_t nameRegister, uint8_t nextRegister){
     return 10;
 }
 
+// Adds SP to the 16 bit int stored in HL
 int Cpu::dadSP(){
     uint16_t hl = (registers.h << 8) | registers.l;
     uint32_t result = registers.sp + hl;
@@ -614,6 +630,7 @@ int Cpu::dadSP(){
     return 10;
 }
 
+// Adds an 8 bit int (1 register) to the A register
 int Cpu::add(uint8_t regName){
     Flags calcFlags(CARRY_BIT | SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
 
@@ -622,6 +639,7 @@ int Cpu::add(uint8_t regName){
     return 4;
 }
 
+// Adds the 8 bit int in M register 
 int Cpu::addM(){
     uint16_t offset = (registers.h << 8) | registers.l;
     add(memory[offset]);
