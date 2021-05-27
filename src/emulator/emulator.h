@@ -6,7 +6,6 @@
 #include <QThread>
 #include <QBitMap>
 #include <QtMultimedia/QMediaPlayer>
-
 #include "../cpu/cpu.h"
 
 #ifndef EMULATOR_H
@@ -36,8 +35,8 @@ signals:
 
 public slots:
     void inputHandler(const int key, bool pressed);
-    void playSoundPort3(int raw);
-    void playSoundPort5(int raw);
+    void playSoundPort3(int);
+    void playSoundPort5(int);
 };
 
 #endif // EMULATOR_H

@@ -3,22 +3,23 @@
 #include <QDebug>
 #include <QBitMap>
 #include <QTime>
-#include "emulator.h"
 #include <QtMultimedia/QMediaPlayer>
-#include <QSoundEffect>
+#include <QtMultimedia/QSoundEffect>
 
+#include "emulator.h"
 
-QMediaPlayer *music = new QMediaPlayer();
+QMediaPlayer* music = new QMediaPlayer();
+
 QSoundEffect effect;
 
+#define HALF_FRAME 8333333
+#define MAX_CYCLES 16667;
 
-#define HALF_FRAME 9
-#define MAX_CYCLES 1000000;
+
 
 Emulator::Emulator()
 {
     effect.setVolume(0.25f);
-
     originalScreen = QImage(256, 224, QImage::Format_RGB32);
     transform.rotate(-90);
     transform.scale(2, 2);
@@ -119,48 +120,33 @@ void Emulator::inputHandler(const int key, bool pressed){
 
 }
 
+
 /**************************************************************************************************
  * Function Name: resetSound Emulator::playSoundPort3(int raw)
  * Description: Plays the appropriate sound file based on the current sound output
  * opcode sent to port 3.
 **************************************************************************************************/
 void Emulator::playSoundPort3(int raw){
-effect.setLoopCount(1);
+    effect.setLoopCount(1);
     if(raw & 0){
         music->setMedia(QUrl("qrc:/sounds/ufo_highpitch.wav"));
         resetSound(music);
     }
-
-     else if((raw >> 1) & 1 && (effect.isPlaying() == false)){
+    else if((raw >> 1) & 1 && (!effect.isPlaying())){
         effect.setSource(QUrl("qrc:/sounds/shoot.wav"));
         effect.play();
-
     }
-
-     else if((raw >> 2) & 1 ){
-
+    else if((raw >> 2) & 1 ){
         effect.setSource(QUrl("qrc:/sounds/explosion.wav"));
         effect.play();
-
     }
-     else if((raw >> 3) & 1 ){
-
+    else if((raw >> 3) & 1 ){
         effect.setSource(QUrl("qrc:/sounds/invaderkilled.wav"));
         effect.play();
-
     }
-
-
 }
-/**************************************************************************************************
- * Function Name: resetSound Emulator::playSoundPort5(int raw)
- * Description: Plays the appropriate sound file based on the current sound output
- * opcode sent to port 5.
-**************************************************************************************************/
+
 void Emulator::playSoundPort5(int raw){
-
-
-
     if(raw & 0){
         music->setMedia(QUrl("qrc:/sounds/fastinvader1.wav"));
         resetSound(music);
@@ -168,45 +154,40 @@ void Emulator::playSoundPort5(int raw){
     else if((raw >> 1) & 1){
         music->setMedia(QUrl("qrc:/sounds/fastinvader2.wav"));
         resetSound(music);
-
-
     }
-     else if((raw >> 2) & 1){
+    else if((raw >> 2) & 1){
         music->setMedia(QUrl("qrc:/sounds/fastinvader3.wav"));
         resetSound(music);
-
     }
     else if((raw >> 3) & 1){
         music->setMedia(QUrl("qrc:/sounds/fastinvader4.wav"));
         resetSound(music);
-
     }
-    else if((raw >> 4) & 1  && (effect.isPlaying() == false)){
-
+    else if((raw >> 4) & 1){
         effect.setSource(QUrl("qrc:/sounds/invaderkilled.wav"));
         effect.play();
     }
-
 }
+
 
 /**************************************************************************************************
  * Function Name: resetSound Emulator::resetSound(QMediaPlayer *sound)
  * Description: This function takes the current sound being played and plays the audio, if the
  * sound has already been played, the starting point is reset to 0 for it to be played from the beginning.
 **************************************************************************************************/
-void Emulator::resetSound(QMediaPlayer *sound){
-    if(sound->state()== QMediaPlayer::PlayingState){
-        sound->setPosition(0);
+void Emulator::resetSound(QMediaPlayer *music){
+    if(music->state()== QMediaPlayer::PlayingState){
+        music->setPosition(0);
     }
-    else if(sound->state()== QMediaPlayer::StoppedState){
-           sound->play();
+    else if(music->state()== QMediaPlayer::StoppedState){
+           music->play();
     }
 }
 
 
 void Emulator::run(){
 
-    QFile rom("../Qt_GUI/roms/invaders.rom");
+    QFile rom("../qt_gui2/roms/invaders.rom");
     if(!rom.open(QIODevice::ReadOnly)){
         qFatal("Falied to open the rom file");
     }
@@ -230,9 +211,11 @@ void Emulator::run(){
 
 
             if(cyclesUntilInterrupt <= 0){
-//                if(frameTimer.elapsed() < HALF_FRAME){
-//                    continue;
-//                }
+                if(frameTimer.nsecsElapsed() < HALF_FRAME){
+                    continue;
+
+                }
+
                 bool interruptSuccessful;
                 if(vBlank){
                     interruptSuccessful = cpu.generateInterrupt(0xCF);
@@ -245,6 +228,7 @@ void Emulator::run(){
                 if(interruptSuccessful){
                     vBlank = !vBlank;
                     cyclesUntilInterrupt = MAX_CYCLES;
+                    frameTimer.restart();
                 }
             }
     }

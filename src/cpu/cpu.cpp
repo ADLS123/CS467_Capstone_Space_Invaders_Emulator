@@ -17,7 +17,7 @@ Cpu::Cpu()
 
     //initializing input values
     input0 = 0b01110000;
-    input1 = 0b00010000;
+    input1 = 0b00001000;
     input2 = 0;
     input3 = 0;
 

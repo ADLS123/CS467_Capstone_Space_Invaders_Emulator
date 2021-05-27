@@ -149,8 +149,8 @@ public:
     int daa();
 
 signals:
-    void writeOnPort3(int val);                 //used for triggering sounds on port 3
-    void writeOnPort5(int val);                 //used for triggering sounds on port 5
+    void writeOnPort3(int raw);                 //used for triggering sounds on port 3
+    void writeOnPort5(int raw);                 //used for triggering sounds on port 5
 };
 
 #endif // CPU_H
