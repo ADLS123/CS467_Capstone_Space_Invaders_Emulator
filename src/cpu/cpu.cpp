@@ -698,16 +698,17 @@ int Cpu::sbi(){
     return 7;
 }
 
+// special instruction to read from machine into A register
 int Cpu::in(){
     uint8_t inputValue = memory[registers.pc+1];
     switch(inputValue){
-    case 1:
+    case 1:                     // P1 controller inputs 
         registers.a = input1;
         break;
-    case 2:
+    case 2:                     // P2 controller inputs
         registers.a = input2;
         break;
-    case 3:
+    case 3:                     // read bit shifted result
         registers.a = input3;
         break;
     }
@@ -715,17 +716,18 @@ int Cpu::in(){
     return 10;
 }
 
+// special instruction to write to machine from A register
 int Cpu::out(){
     uint8_t outputValue = memory[registers.pc+1];
     switch(outputValue){
-    case 2:
+    case 2:                     // set bit shift amount
         output2 = registers.a;
-        break;
-    case 3:
+        break;      
+    case 3:                     // play sounds
         output3 = registers.a;
         emit writeOnPort3(output3);
         break;
-    case 4:
+    case 4:                     // bit shift data in A register based on bit shift amount
     {
         output4 = registers.a;
         uint8_t offset = output2 & 7;
@@ -738,11 +740,11 @@ int Cpu::out(){
         input3 = (shiftReg & bitMask) >> (8 - offset);
         break;
     }
-    case 5:
+    case 5:                     // play sounds
         output5 = registers.a;
         emit writeOnPort5(output5);
         break;
-    case 6:
+    case 6:                     // reset watchdog circuit
         output6 = registers.a;
         break;
     }
@@ -750,13 +752,17 @@ int Cpu::out(){
     return 10;
 }
 
-
+// Special instruction, only one to use aux carry flag
 int Cpu::daa(){
+    // increment lower nibble of A register by 6 if conditions met
+    // set aux flag based on result of the increment
     uint8_t lowNibble = getLowBits(registers.a);
     if(lowNibble > 9 || flags.testBits(AUX_BIT)){
         Flags calcFlags(AUX_BIT);
         registers.a = addBytes(registers.a, 6, false, calcFlags);
     }
+    // increment higher nibble of A register by 6 if conditions met
+    // set carry flag based on result
     if(getHighBits(registers.a) > 9 || flags.testBits(CARRY_BIT)){
         bool oldValue = flags.testBits(CARRY_BIT);
 
@@ -771,11 +777,12 @@ int Cpu::daa(){
     return 4;
 }
 
+// helper function called to emulate any 8080 binary opcode
 int Cpu::emulateInstruction(){
     return getInstruction(memory[registers.pc]);
 }
 
-
+// Generates a video interrupt (either RST 0 or RST 1 opcodes)
 bool Cpu::generateInterrupt(uint8_t opCode){
     bool success = false;
     if(enableInterrupts){
@@ -786,6 +793,7 @@ bool Cpu::generateInterrupt(uint8_t opCode){
     return success;
 }
 
+// Reads binary opcode and calls corresponding function to handle opcode
 int Cpu::getInstruction(uint8_t operation){
     switch(operation){
         case 0x00:
