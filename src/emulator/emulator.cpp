@@ -132,9 +132,10 @@ void Emulator::playSoundPort3(int raw){
         effect.setSource(QUrl("qrc:/sounds/ufo_highpitch.wav"));
         effect.play();
     }
-    else if((raw >> 1) & 1 && (!effect.isPlaying())){
+    else if((raw >> 1) & 1){
         effect.setSource(QUrl("qrc:/sounds/shoot.wav"));
         effect.play();
+
     }
     else if((raw >> 2) & 1 ){
         effect.setSource(QUrl("qrc:/sounds/explosion.wav"));
