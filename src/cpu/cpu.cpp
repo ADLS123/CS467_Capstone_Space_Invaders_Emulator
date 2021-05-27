@@ -573,7 +573,7 @@ int Cpu::dcxSP(){
     return 5;
 }
 
-// Increments an 8 bit int (usually 1 register) by 1, sets flags
+// Increments a register by 1, sets flags
 int Cpu::inr(uint8_t &regName){
     Flags calcFlags(SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
     regName = addBytes(regName, 1, false, calcFlags);
@@ -588,7 +588,7 @@ int Cpu::inrM(){
 
 }
 
-// Decrements an 8 bit int (1 register) by 1, sets flags
+// Decrements a register by 1, sets flags
 int Cpu::dcr(uint8_t &regName){
     regName = addBytes(regName, -1, false, SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
     registers.pc++;
@@ -630,7 +630,7 @@ int Cpu::dadSP(){
     return 10;
 }
 
-// Adds an 8 bit int (1 register) to the A register
+// Adds 1 register to the A register
 int Cpu::add(uint8_t regName){
     Flags calcFlags(CARRY_BIT | SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
 
@@ -639,13 +639,14 @@ int Cpu::add(uint8_t regName){
     return 4;
 }
 
-// Adds the 8 bit int in M register 
+// ADD on the M register
 int Cpu::addM(){
     uint16_t offset = (registers.h << 8) | registers.l;
     add(memory[offset]);
     return 7;
 }
 
+// Adds 1 register and the carry flag to the A register
 int Cpu::adc(uint8_t regName){
     Flags calcFlags(CARRY_BIT | SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
 
@@ -654,12 +655,14 @@ int Cpu::adc(uint8_t regName){
     return 4;
 }
 
+// ADC with the M register
 int Cpu::adcM(){
     uint16_t offset = (registers.h << 8) | registers.l;
     adc(memory[offset]);
     return 7;
 }
 
+// Subtracts 1 register from the A register
 int Cpu::sub(uint8_t regName){
     Flags calcFlags(CARRY_BIT | SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
     uint8_t operandToCompare = (regName ^ 0xFF) + 1;
@@ -669,6 +672,7 @@ int Cpu::sub(uint8_t regName){
     return 4;
 }
 
+// SUB with the M register
 int Cpu::subM(){
     uint16_t offset = (registers.h << 8) | registers.l;
     sub(memory[offset]);
@@ -676,6 +680,7 @@ int Cpu::subM(){
     return 7;
 }
 
+// Subtracts 1 register and the carry flag from the A register
 int Cpu::sbb(uint8_t regName){
     Flags calcFlags(CARRY_BIT | SIGN_BIT | ZERO_BIT | PARITY_BIT | AUX_BIT);
     regName = regName + flags.testBits(CARRY_BIT);
@@ -686,30 +691,35 @@ int Cpu::sbb(uint8_t regName){
     return 4;
 }
 
+// SBB with the M register
 int Cpu::sbbM(){
     uint16_t offset = (registers.h << 8) | registers.l;
     sbb(memory[offset]);
     return 7;
 }
 
+// Adds an 8 bit int stored in memory to the A register
 int Cpu::adi(){
     add(memory[registers.pc+1]);
     registers.pc++;
     return 7;
 }
 
+// Subtracts an 8 bit int stored in memory from the A register
 int Cpu::sui(){
     sub(memory[registers.pc+1]);
     registers.pc++;
     return 7;
 }
 
+// Adds an 8 bit int stored in memory and the carry flag to the A register
 int Cpu::aci(){
     adc(memory[registers.pc+1]);
     registers.pc++;
     return 7;
 }
 
+// Subtracts an 8 bit int stored in memory and the carry flag from the A register
 int Cpu::sbi(){
     sbb(memory[registers.pc+1]);
     registers.pc++;
