@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(Qt_GUI LANGUAGES CXX)
+project(qt_gui2 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -41,19 +41,19 @@ set(PROJECT_SOURCES
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(Qt_GUI
+    qt_add_executable(qt_gui2
         ${PROJECT_SOURCES}
     )
 else()
     if(ANDROID)
-        add_library(Qt_GUI SHARED
+        add_library(qt_gui2 SHARED
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(Qt_GUI res.qrc
+        add_executable(qt_gui2 res.qrc
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-target_link_libraries(Qt_GUI PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt5::Multimedia)
+target_link_libraries(qt_gui2 PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt5::Multimedia)
