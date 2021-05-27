@@ -129,8 +129,13 @@ int Cpu::addBytes(uint8_t byte, uint8_t byte2, bool carryIn, Flags flagVar){
 
 //Opcode functions
 
-/*NOTE: The M register is the location in memory pointed to by the combined register HL.
+/*NOTES: 
+        - The M register is the location in memory pointed to by the combined register HL.
         For example: If HL = 0xABCD, then the M register would be at memory[0xABCD]
+    
+        - The 8080 CPU is little endian, meaning that higher order 8 bits of 16 bit integers 
+        are stored after the lower order bits.
+        For example: The value 0xABCD would be stored as 0xCDAB in memory
   */
 
 // Ands 1 register with the A register
@@ -408,6 +413,7 @@ int Cpu::nop(){
 
 //jmp, call, ret, and push/pop
 
+// jumps the pc to the specified address
 int Cpu::jmp(){
     uint8_t low = memory[registers.pc+1];
     uint8_t high = memory[registers.pc+2];
@@ -417,6 +423,7 @@ int Cpu::jmp(){
     return 10;
 }
 
+// jumps depending on whether certain flags are set
 int Cpu::conditionalJmp(bool condition){
     if(condition){
         jmp();
@@ -427,6 +434,7 @@ int Cpu::conditionalJmp(bool condition){
     return 10;
 }
 
+// pushes current PC location onto stack, and moves PC to specified call address
 int Cpu::call(){
     uint16_t returnPC = registers.pc + 3;
     memory[registers.sp-1] = getHighBits(returnPC);
@@ -438,6 +446,7 @@ int Cpu::call(){
     return 17;
 }
 
+// CALL depending on whether certain flags are set
 int Cpu::conditionalCall(bool condition){
     if(condition){
         call();
@@ -449,6 +458,7 @@ int Cpu::conditionalCall(bool condition){
     }
 }
 
+// CALL to specific reset address depending on the RST opcode
 int Cpu::rst(uint8_t resetNumber){
     uint8_t low = getLowBits(registers.pc);
     uint8_t high = getHighBits(registers.pc);
@@ -463,6 +473,7 @@ int Cpu::rst(uint8_t resetNumber){
     return 11;
 }
 
+// Pops the 16 bit return address off top of stack, move PC to that return address
 int Cpu::ret(){
     uint16_t value = (memory[registers.sp+1] << 8) | memory[registers.sp];
     registers.pc = value;
@@ -471,6 +482,7 @@ int Cpu::ret(){
     return 10;
 }
 
+// RET depending on whether certain flags are set
 int Cpu::conditionalRet(bool condition){
     if(condition){
         ret();
@@ -482,6 +494,7 @@ int Cpu::conditionalRet(bool condition){
     }
 }
 
+// Push a 16 bit int (from 2 registers) onto the stack
 int Cpu::push(uint8_t nameRegister, uint8_t nextRegister){
     memory[registers.sp-1] = nameRegister;
     memory[registers.sp-2] = nextRegister;
@@ -490,6 +503,7 @@ int Cpu::push(uint8_t nameRegister, uint8_t nextRegister){
     return 11;
 }
 
+// PUSH a 16 bit value PSW, representing the A register combined with the state of all flags, onto the stack
 int Cpu::pushPSW(){
     memory[registers.sp-1] = registers.a;
     memory[registers.sp-2] = flags.getRegisterValue();
@@ -498,6 +512,7 @@ int Cpu::pushPSW(){
     return 11;
 }
 
+// Pop the 16 bit int off the stack into 2 registers
 int Cpu::pop(uint8_t &nameRegister, uint8_t &nextRegister){
     nextRegister = memory[registers.sp];
     nameRegister = memory[registers.sp+1];
@@ -506,21 +521,24 @@ int Cpu::pop(uint8_t &nameRegister, uint8_t &nextRegister){
     return 10;
 }
 
+// POP the 16 bit int off the stack, updating the flags and the A register
 int Cpu::popPSW(){
-    flags = Flags(memory[registers.sp]);
-    registers.a = memory[registers.sp+1];
+    flags = Flags(memory[registers.sp]); // first 8 bits represent state of the flags
+    registers.a = memory[registers.sp+1]; // second 8 bits are popped into A register
 
     registers.sp += 2;
     registers.pc++;
     return 10;
 }
 
+// Set the stack pointer to the memory address stored in the combined HL register
 int Cpu::sphl(){
     registers.sp = (registers.h << 8) | registers.l;
     registers.pc++;
     return 5;
 }
 
+// Exchange the 16 bit value stored in the combined HL register with the 16 bit value at the top of the stack
 int Cpu::xthl(){
     uint8_t tempH = registers.h;
     uint8_t tempL = registers.l;
