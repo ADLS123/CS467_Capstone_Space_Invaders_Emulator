@@ -129,10 +129,7 @@ void Emulator::inputHandler(const int key, bool pressed){
 void Emulator::playSoundPort3(int raw){
     effect.setLoopCount(1);
     if(raw & 1){
-        //music->setMedia(QUrl("qrc:/sounds/ufo_highpitch.wav"));
-        //resetSound(music);
         effect.setSource(QUrl("qrc:/sounds/ufo_highpitch.wav"));
-
         effect.play();
     }
     else if((raw >> 1) & 1 && (!effect.isPlaying())){
