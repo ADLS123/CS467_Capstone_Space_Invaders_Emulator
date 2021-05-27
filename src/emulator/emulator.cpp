@@ -12,7 +12,11 @@ QMediaPlayer* music = new QMediaPlayer();
 
 QSoundEffect effect;
 
+// half frame time set to 1/120 of a second in nanoseconds
+// 2 interrupts are sent per frame (60fps), helps us match the 8080 cpu clock speed
 #define HALF_FRAME 8333333
+// the maximum number of cycles per half frame, based on the 8080 cpu clock speed
+// of 2 Mhz
 #define MAX_CYCLES 16667;
 
 
@@ -28,6 +32,7 @@ Emulator::Emulator()
     connect(&cpu, SIGNAL(writeOnPort5(int)), this, SLOT(playSoundPort5(int)));
 }
 
+// draws the screen by reading bitmap in video ram at address 0x2400
 void Emulator::paintScreen(){
     for(int i = 0; i < 224; ++i){
         for(int j = 0; j < 32; ++j){
@@ -48,7 +53,7 @@ void Emulator::paintScreen(){
             }
         }
     }
-
+    // the video ram bitmap is rotated clockwise, so we need to rotate counterclockwise correct it
     rotatedScreen = originalScreen.transformed(transform);
     emit screenIsUpdated(&rotatedScreen);
 }
@@ -126,7 +131,9 @@ void Emulator::inputHandler(const int key, bool pressed){
  * Description: Plays the appropriate sound file based on the current sound output
  * opcode sent to port 3.
 **************************************************************************************************/
+
 void Emulator::playSoundPort3(int raw){
+    // the sound being played is dependent on which bit is set in the a register
     effect.setLoopCount(1);
     if(raw & 1){
         effect.setSource(QUrl("qrc:/sounds/ufo_highpitch.wav"));
@@ -148,6 +155,7 @@ void Emulator::playSoundPort3(int raw){
 }
 
 void Emulator::playSoundPort5(int raw){
+    // the sound being played is dependent on which bit is set in the a register
     if(raw & 1){
         music->setMedia(QUrl("qrc:/sounds/fastinvader1.wav"));
         resetSound(music);
@@ -202,35 +210,43 @@ void Emulator::run(){
         cpu.memory[i] = romData.at(i);
     }
 
-
+    // start timer
     QElapsedTimer frameTimer;
+    // start cycle counter
     int cyclesUntilInterrupt = MAX_CYCLES;
     bool vBlank = true;
     while(true){
+        // check if max cycles has been reached
+       if(cyclesUntilInterrupt <= 0){
+            // if enough cycles have been executed, but not enough time has passed,
+            // do not execute any more instructions until enough time has passed
+            if(frameTimer.nsecsElapsed() < HALF_FRAME){
+                continue;
+
+            }
+
+            // once enough cycles per half frame have been done, and enough time has passed
+            // send one of the 2 interrupts, the one that's different from the last interrupt sent
+            bool interruptSuccessful;
+            if(vBlank){
+                interruptSuccessful = cpu.generateInterrupt(0xCF);
+            }
+            else{
+                // When sending VBI, also paint screen, as that means one frame is done being generated in video RAM
+                interruptSuccessful = cpu.generateInterrupt(0xD7);
+                paintScreen();
+            }
+
+            
+            if(interruptSuccessful){
+                // restart timer, reset cycle counter, and flip VBI tracker on successful interrupt
+                vBlank = !vBlank;
+                cyclesUntilInterrupt = MAX_CYCLES;
+                frameTimer.restart();
+            }
+        }
+        // emulate instructions
         int cycles = cpu.emulateInstruction();
         cyclesUntilInterrupt -= cycles;
-
-
-            if(cyclesUntilInterrupt <= 0){
-                if(frameTimer.nsecsElapsed() < HALF_FRAME){
-                    continue;
-
-                }
-
-                bool interruptSuccessful;
-                if(vBlank){
-                    interruptSuccessful = cpu.generateInterrupt(0xCF);
-                }
-                else{
-                    interruptSuccessful = cpu.generateInterrupt(0xD7);
-                    paintScreen();
-                }
-
-                if(interruptSuccessful){
-                    vBlank = !vBlank;
-                    cyclesUntilInterrupt = MAX_CYCLES;
-                    frameTimer.restart();
-                }
-            }
     }
 }
