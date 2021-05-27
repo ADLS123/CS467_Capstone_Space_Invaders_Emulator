@@ -128,9 +128,12 @@ void Emulator::inputHandler(const int key, bool pressed){
 **************************************************************************************************/
 void Emulator::playSoundPort3(int raw){
     effect.setLoopCount(1);
-    if(raw & 0){
-        music->setMedia(QUrl("qrc:/sounds/ufo_highpitch.wav"));
-        resetSound(music);
+    if(raw & 1){
+        //music->setMedia(QUrl("qrc:/sounds/ufo_highpitch.wav"));
+        //resetSound(music);
+        effect.setSource(QUrl("qrc:/sounds/ufo_highpitch.wav"));
+
+        effect.play();
     }
     else if((raw >> 1) & 1 && (!effect.isPlaying())){
         effect.setSource(QUrl("qrc:/sounds/shoot.wav"));
@@ -147,7 +150,7 @@ void Emulator::playSoundPort3(int raw){
 }
 
 void Emulator::playSoundPort5(int raw){
-    if(raw & 0){
+    if(raw & 1){
         music->setMedia(QUrl("qrc:/sounds/fastinvader1.wav"));
         resetSound(music);
     }
