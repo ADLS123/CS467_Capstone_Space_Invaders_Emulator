@@ -15,8 +15,6 @@ Gui::Gui()
     //connects the emulator signal to the gui slot and input received signal to the handler slot
     connect(&emulator, SIGNAL(screenIsUpdated(const QImage*)), this, SLOT(showScreen(const QImage*)));
     connect(this, SIGNAL(inputReceived(int,bool)), &emulator, SLOT(inputHandler(int,bool)));
-    //actually runs the emulator
-    emulator.start();
 }
 
 //sets the pixelmap for painting the screen
@@ -32,6 +30,10 @@ void Gui::keyPressEvent(QKeyEvent* event){
 //emits the input received signal upon control key release
 void Gui::keyReleaseEvent(QKeyEvent* event){
     emit inputReceived(event->key(), false);
+}
+
+void Gui::runEmulator(){
+    emulator.start();       //run the emulator
 }
 
 //destructor that terminates qThread process

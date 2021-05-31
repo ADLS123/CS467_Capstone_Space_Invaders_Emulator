@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::on_runButton_clicked()
 {
     this->hide();       //closes main window
+    window.runEmulator();
     window.show();      //opens the actual emulator
 }
 

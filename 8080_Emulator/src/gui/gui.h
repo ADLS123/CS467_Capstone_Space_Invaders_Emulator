@@ -18,6 +18,7 @@ class Gui: public QWidget{
     Q_OBJECT
 public:
     Gui();                                  //constructor
+    void runEmulator();
     ~Gui();                                 //destructor
 private:
     //sets up the Screen for Space Invaders
