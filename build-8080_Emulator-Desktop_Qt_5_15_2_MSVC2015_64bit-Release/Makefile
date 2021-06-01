@@ -33,7 +33,7 @@ IDC           = idc
 IDL           = midl
 ZIP           = zip -r -9
 DEF_FILE      = 
-RES_FILE      = 
+RES_FILE      = 8080_Emulator_resource.res
 SED           = $(QMAKE) -install sed
 MOVE          = move
 SUBTARGETS    =  \
@@ -259,6 +259,7 @@ Makefile: ..\8080_Emulator\8080_Emulator.pro ..\..\Qt\5.15.2\msvc2015_64\mkspecs
 		..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qt_config.prf \
 		..\..\Qt\5.15.2\msvc2015_64\mkspecs\win32-msvc\qmake.conf \
 		..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\spec_post.prf \
+		.qmake.stash \
 		..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\exclusive_builds.prf \
 		..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\msvc-version.conf \
 		..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\toolchain.prf \
@@ -290,9 +291,8 @@ Makefile: ..\8080_Emulator\8080_Emulator.pro ..\..\Qt\5.15.2\msvc2015_64\mkspecs
 		..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Network.prl \
 		..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Core.prl \
 		..\..\Qt\5.15.2\msvc2015_64\lib\qtmain.prl \
-		.qmake.stash \
 		..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\build_pass.prf \
-		..\8080_Emulator\res.qrc \
+		..\8080_Emulator\src\res.qrc \
 		..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Multimediad.prl \
 		..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Widgetsd.prl \
 		..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Guid.prl \
@@ -475,6 +475,7 @@ Makefile: ..\8080_Emulator\8080_Emulator.pro ..\..\Qt\5.15.2\msvc2015_64\mkspecs
 ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qt_config.prf:
 ..\..\Qt\5.15.2\msvc2015_64\mkspecs\win32-msvc\qmake.conf:
 ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\spec_post.prf:
+.qmake.stash:
 ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\exclusive_builds.prf:
 ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\msvc-version.conf:
 ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\toolchain.prf:
@@ -506,9 +507,8 @@ Makefile: ..\8080_Emulator\8080_Emulator.pro ..\..\Qt\5.15.2\msvc2015_64\mkspecs
 ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Network.prl:
 ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Core.prl:
 ..\..\Qt\5.15.2\msvc2015_64\lib\qtmain.prl:
-.qmake.stash:
 ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\build_pass.prf:
-..\8080_Emulator\res.qrc:
+..\8080_Emulator\src\res.qrc:
 ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Multimediad.prl:
 ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Widgetsd.prl:
 ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Guid.prl:

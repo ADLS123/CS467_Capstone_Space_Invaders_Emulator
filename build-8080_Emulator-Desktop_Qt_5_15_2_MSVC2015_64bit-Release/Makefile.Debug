@@ -19,7 +19,7 @@ CXXFLAGS      = -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStri
 INCPATH       = -I..\8080_Emulator -I. -I..\..\Qt\5.15.2\msvc2015_64\include -I..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia -I..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets -I..\..\Qt\5.15.2\msvc2015_64\include\QtGui -I..\..\Qt\5.15.2\msvc2015_64\include\QtANGLE -I..\..\Qt\5.15.2\msvc2015_64\include\QtNetwork -I..\..\Qt\5.15.2\msvc2015_64\include\QtCore -Idebug -I. -I/include -I..\..\Qt\5.15.2\msvc2015_64\mkspecs\win32-msvc 
 LINKER        = link
 LFLAGS        = /NOLOGO /DYNAMICBASE /NXCOMPAT /DEBUG /SUBSYSTEM:WINDOWS "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"
-LIBS          = C:\Qt\5.15.2\msvc2015_64\lib\Qt5Multimediad.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Widgetsd.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Guid.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Networkd.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Cored.lib  C:\Qt\5.15.2\msvc2015_64\lib\qtmaind.lib /LIBPATH:C:\openssl\lib /LIBPATH:C:\Utils\my_sql\mysql-5.7.25-winx64\lib /LIBPATH:C:\Utils\postgresql\pgsql\lib shell32.lib 
+LIBS          = C:\Qt\5.15.2\msvc2015_64\lib\Qt5Multimediad.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Widgetsd.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Guid.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Networkd.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Cored.lib debug\8080_Emulator_resource.res  C:\Qt\5.15.2\msvc2015_64\lib\qtmaind.lib /LIBPATH:C:\openssl\lib /LIBPATH:C:\Utils\my_sql\mysql-5.7.25-winx64\lib /LIBPATH:C:\Utils\postgresql\pgsql\lib shell32.lib 
 QMAKE         = C:\Qt\5.15.2\msvc2015_64\bin\qmake.exe
 DEL_FILE      = del
 CHK_DIR_EXISTS= if not exist
@@ -40,7 +40,7 @@ IDC           = idc
 IDL           = midl
 ZIP           = zip -r -9
 DEF_FILE      = 
-RES_FILE      = 
+RES_FILE      = debug\8080_Emulator_resource.res
 SED           = $(QMAKE) -install sed
 MOVE          = move
 
@@ -50,9 +50,9 @@ OBJECTS_DIR   = debug
 
 ####### Files
 
-SOURCES       = ..\8080_Emulator\instructionWindow.cpp \
-		..\8080_Emulator\main.cpp \
-		..\8080_Emulator\mainWindow.cpp \
+SOURCES       = ..\8080_Emulator\src\instructionWindow.cpp \
+		..\8080_Emulator\src\main.cpp \
+		..\8080_Emulator\src\mainWindow.cpp \
 		..\8080_Emulator\src\cpu\cpu.cpp \
 		..\8080_Emulator\src\emulator\emulator.cpp \
 		..\8080_Emulator\src\flags\flags.cpp \
@@ -76,14 +76,14 @@ OBJECTS       = debug\instructionWindow.obj \
 		debug\moc_emulator.obj \
 		debug\moc_gui.obj
 
-DIST          =  ..\8080_Emulator\instructionWindow.h \
-		..\8080_Emulator\mainWindow.h \
+DIST          =  ..\8080_Emulator\src\instructionWindow.h \
+		..\8080_Emulator\src\mainWindow.h \
 		..\8080_Emulator\src\cpu\cpu.h \
 		..\8080_Emulator\src\emulator\emulator.h \
 		..\8080_Emulator\src\flags\flags.h \
-		..\8080_Emulator\src\gui\gui.h ..\8080_Emulator\instructionWindow.cpp \
-		..\8080_Emulator\main.cpp \
-		..\8080_Emulator\mainWindow.cpp \
+		..\8080_Emulator\src\gui\gui.h ..\8080_Emulator\src\instructionWindow.cpp \
+		..\8080_Emulator\src\main.cpp \
+		..\8080_Emulator\src\mainWindow.cpp \
 		..\8080_Emulator\src\cpu\cpu.cpp \
 		..\8080_Emulator\src\emulator\emulator.cpp \
 		..\8080_Emulator\src\flags\flags.cpp \
@@ -137,6 +137,26 @@ DESTDIR_TARGET = debug\8080_Emulator.exe
 	$<
 <<
 
+{..\8080_Emulator\src}.cpp{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\8080_Emulator\src}.cc{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\8080_Emulator\src}.cxx{debug\}.obj::
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
+{..\8080_Emulator\src}.c{debug\}.obj::
+	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
+	$<
+<<
+
 {debug}.cpp{debug\}.obj::
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
@@ -153,26 +173,6 @@ DESTDIR_TARGET = debug\8080_Emulator.exe
 <<
 
 {debug}.c{debug\}.obj::
-	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\8080_Emulator}.cpp{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\8080_Emulator}.cc{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\8080_Emulator}.cxx{debug\}.obj::
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -Fodebug\ @<<
-	$<
-<<
-
-{..\8080_Emulator}.c{debug\}.obj::
 	$(CC) -c $(CFLAGS) $(INCPATH) -Fodebug\ @<<
 	$<
 <<
@@ -242,11 +242,14 @@ DESTDIR_TARGET = debug\8080_Emulator.exe
 first: all
 all: Makefile.Debug  debug\8080_Emulator.exe
 
-debug\8080_Emulator.exe: C:\Qt\5.15.2\msvc2015_64\lib\Qt5Multimediad.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Widgetsd.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Guid.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Networkd.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Cored.lib C:\Qt\5.15.2\msvc2015_64\lib\qtmaind.lib ui_instructionWindow.h ui_mainWindow.h $(OBJECTS) 
+debug\8080_Emulator.exe: C:\Qt\5.15.2\msvc2015_64\lib\Qt5Multimediad.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Widgetsd.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Guid.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Networkd.lib C:\Qt\5.15.2\msvc2015_64\lib\Qt5Cored.lib C:\Qt\5.15.2\msvc2015_64\lib\qtmaind.lib ui_instructionWindow.h ui_mainWindow.h $(OBJECTS) debug\8080_Emulator_resource.res
 	$(LINKER) $(LFLAGS) /MANIFEST:embed /OUT:$(DESTDIR_TARGET) @<<
 debug\instructionWindow.obj debug\main.obj debug\mainWindow.obj debug\cpu.obj debug\emulator.obj debug\flags.obj debug\gui.obj debug\qrc_res.obj debug\moc_instructionWindow.obj debug\moc_mainWindow.obj debug\moc_cpu.obj debug\moc_emulator.obj debug\moc_gui.obj
 $(LIBS)
 <<
+
+debug\8080_Emulator_resource.res: 8080_Emulator_resource.rc
+	rc /NOLOGO -D_DEBUG $(DEFINES) -fo debug\8080_Emulator_resource.res 8080_Emulator_resource.rc
 
 qmake: FORCE
 	@$(QMAKE) -o Makefile.Debug ..\8080_Emulator\8080_Emulator.pro -spec win32-msvc "CONFIG+=qtquickcompiler"
@@ -254,11 +257,12 @@ qmake: FORCE
 qmake_all: FORCE
 
 dist:
-	$(ZIP) 8080_Emulator.zip $(SOURCES) $(DIST) ..\8080_Emulator\8080_Emulator.pro ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\spec_pre.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\angle.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\windows-desktop.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\win32\windows_vulkan_sdk.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\windows-vulkan.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\msvc-desktop.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\qconfig.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3danimation.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3danimation_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dcore.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dcore_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dextras.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dextras_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dinput.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dinput_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dlogic.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dlogic_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquick.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquick_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickanimation.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickanimation_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickextras.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickextras_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickinput.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickinput_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickrender.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickrender_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickscene2d.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickscene2d_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3drender.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3drender_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_accessibility_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axbase.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axbase_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axcontainer.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axcontainer_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axserver.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axserver_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_bluetooth.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_bluetooth_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_bodymovin_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_bootstrap_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_charts.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_charts_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_concurrent.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_concurrent_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_core.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_core_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_datavisualization.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_datavisualization_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_dbus.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_dbus_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_designer.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_designer_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_designercomponents_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_devicediscovery_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_edid_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_egl_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_eventdispatcher_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_fb_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_fontdatabase_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_gamepad.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_gamepad_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_gui.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_gui_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_help.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_help_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_location.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_location_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_multimedia.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_multimedia_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_multimediawidgets.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_network.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_network_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_networkauth.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_networkauth_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_nfc.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_nfc_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_opengl.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_opengl_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_openglextensions.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_openglextensions_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_packetprotocol_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_platformcompositor_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_positioning.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_positioning_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_positioningquick.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_positioningquick_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_printsupport.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_printsupport_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_purchasing.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_purchasing_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qml.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qml_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmldebug_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmldevtools_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmlmodels.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmlmodels_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmltest.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmltest_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmlworkerscript.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmlworkerscript_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3d.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3d_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3dassetimport.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3dassetimport_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3drender.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3drender_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3druntimerender.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3druntimerender_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3dutils.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3dutils_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickcontrols2.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickparticles_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickshapes_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quicktemplates2.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickwidgets.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickwidgets_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_remoteobjects.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_remoteobjects_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_repparser.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_repparser_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_script.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_script_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_scripttools.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_scripttools_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_scxml.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_scxml_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_sensors.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_sensors_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_serialbus.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_serialbus_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_serialport.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_serialport_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_sql.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_sql_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_svg.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_svg_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_testlib.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_testlib_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_texttospeech.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_texttospeech_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_theme_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_uiplugin.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_uitools.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_uitools_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_virtualkeyboard.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_virtualkeyboard_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_vulkan_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_webchannel.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_webchannel_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_websockets.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_websockets_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_webview.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_webview_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_widgets.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_widgets_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_windowsuiautomation_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_winextras.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_winextras_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_xml.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_xml_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_xmlpatterns.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_zlib_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qt_functions.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qt_config.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\win32-msvc\qmake.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\spec_post.prf .qmake.stash ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\exclusive_builds.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\msvc-version.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\toolchain.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\default_pre.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\win32\default_pre.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\resolve_config.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\exclusive_builds_post.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\default_post.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\build_pass.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qtquickcompiler.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\precompile_header.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\warn_on.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qt.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\resources_functions.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\resources.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\moc.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\win32\opengl.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\uic.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qmake_use.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\file_copies.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\win32\windows.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\testcase_targets.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\exceptions.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\yacc.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\lex.prf ..\8080_Emulator\8080_Emulator.pro ..\8080_Emulator\res.qrc ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Multimediad.prl ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Widgetsd.prl ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Guid.prl ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Networkd.prl ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Cored.prl ..\..\Qt\5.15.2\msvc2015_64\lib\qtmaind.prl   ..\8080_Emulator\res.qrc ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\data\dummy.cpp ..\8080_Emulator\instructionWindow.h ..\8080_Emulator\mainWindow.h ..\8080_Emulator\src\cpu\cpu.h ..\8080_Emulator\src\emulator\emulator.h ..\8080_Emulator\src\flags\flags.h ..\8080_Emulator\src\gui\gui.h  ..\8080_Emulator\instructionWindow.cpp ..\8080_Emulator\main.cpp ..\8080_Emulator\mainWindow.cpp ..\8080_Emulator\src\cpu\cpu.cpp ..\8080_Emulator\src\emulator\emulator.cpp ..\8080_Emulator\src\flags\flags.cpp ..\8080_Emulator\src\gui\gui.cpp ..\8080_Emulator\instructionWindow.ui ..\8080_Emulator\mainWindow.ui    
+	$(ZIP) 8080_Emulator.zip $(SOURCES) $(DIST) ..\8080_Emulator\8080_Emulator.pro ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\spec_pre.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\angle.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\windows-desktop.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\win32\windows_vulkan_sdk.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\windows-vulkan.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\msvc-desktop.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\qconfig.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3danimation.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3danimation_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dcore.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dcore_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dextras.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dextras_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dinput.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dinput_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dlogic.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dlogic_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquick.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquick_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickanimation.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickanimation_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickextras.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickextras_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickinput.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickinput_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickrender.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickrender_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickscene2d.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3dquickscene2d_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3drender.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_3drender_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_accessibility_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axbase.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axbase_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axcontainer.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axcontainer_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axserver.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_axserver_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_bluetooth.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_bluetooth_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_bodymovin_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_bootstrap_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_charts.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_charts_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_concurrent.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_concurrent_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_core.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_core_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_datavisualization.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_datavisualization_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_dbus.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_dbus_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_designer.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_designer_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_designercomponents_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_devicediscovery_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_edid_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_egl_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_eventdispatcher_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_fb_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_fontdatabase_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_gamepad.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_gamepad_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_gui.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_gui_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_help.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_help_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_location.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_location_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_multimedia.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_multimedia_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_multimediawidgets.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_multimediawidgets_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_network.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_network_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_networkauth.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_networkauth_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_nfc.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_nfc_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_opengl.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_opengl_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_openglextensions.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_openglextensions_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_packetprotocol_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_platformcompositor_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_positioning.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_positioning_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_positioningquick.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_positioningquick_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_printsupport.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_printsupport_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_purchasing.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_purchasing_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qml.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qml_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmldebug_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmldevtools_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmlmodels.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmlmodels_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmltest.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmltest_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmlworkerscript.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qmlworkerscript_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_qtmultimediaquicktools_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3d.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3d_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3dassetimport.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3dassetimport_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3drender.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3drender_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3druntimerender.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3druntimerender_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3dutils.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick3dutils_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quick_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickcontrols2.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickcontrols2_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickparticles_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickshapes_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quicktemplates2.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quicktemplates2_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickwidgets.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_quickwidgets_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_remoteobjects.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_remoteobjects_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_repparser.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_repparser_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_script.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_script_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_scripttools.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_scripttools_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_scxml.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_scxml_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_sensors.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_sensors_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_serialbus.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_serialbus_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_serialport.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_serialport_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_sql.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_sql_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_svg.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_svg_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_testlib.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_testlib_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_texttospeech.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_texttospeech_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_theme_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_uiplugin.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_uitools.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_uitools_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_virtualkeyboard.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_virtualkeyboard_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_vulkan_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_webchannel.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_webchannel_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_websockets.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_websockets_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_webview.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_webview_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_widgets.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_widgets_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_windowsuiautomation_support_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_winextras.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_winextras_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_xml.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_xml_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_xmlpatterns.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_xmlpatterns_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\modules\qt_lib_zlib_private.pri ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qt_functions.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qt_config.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\win32-msvc\qmake.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\spec_post.prf .qmake.stash ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\exclusive_builds.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\common\msvc-version.conf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\toolchain.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\default_pre.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\win32\default_pre.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\resolve_config.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\exclusive_builds_post.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\default_post.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\build_pass.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qtquickcompiler.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\precompile_header.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\warn_on.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qt.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\resources_functions.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\resources.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\moc.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\win32\opengl.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\uic.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\qmake_use.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\file_copies.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\win32\windows.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\testcase_targets.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\exceptions.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\yacc.prf ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\lex.prf ..\8080_Emulator\8080_Emulator.pro ..\8080_Emulator\src\res.qrc ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Multimediad.prl ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Widgetsd.prl ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Guid.prl ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Networkd.prl ..\..\Qt\5.15.2\msvc2015_64\lib\Qt5Cored.prl ..\..\Qt\5.15.2\msvc2015_64\lib\qtmaind.prl   ..\8080_Emulator\src\res.qrc ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\data\dummy.cpp ..\8080_Emulator\src\instructionWindow.h ..\8080_Emulator\src\mainWindow.h ..\8080_Emulator\src\cpu\cpu.h ..\8080_Emulator\src\emulator\emulator.h ..\8080_Emulator\src\flags\flags.h ..\8080_Emulator\src\gui\gui.h  ..\8080_Emulator\src\instructionWindow.cpp ..\8080_Emulator\src\main.cpp ..\8080_Emulator\src\mainWindow.cpp ..\8080_Emulator\src\cpu\cpu.cpp ..\8080_Emulator\src\emulator\emulator.cpp ..\8080_Emulator\src\flags\flags.cpp ..\8080_Emulator\src\gui\gui.cpp ..\8080_Emulator\src\instructionWindow.ui ..\8080_Emulator\src\mainWindow.ui    
 
 clean: compiler_clean 
 	-$(DEL_FILE) debug\instructionWindow.obj debug\main.obj debug\mainWindow.obj debug\cpu.obj debug\emulator.obj debug\flags.obj debug\gui.obj debug\qrc_res.obj debug\moc_instructionWindow.obj debug\moc_mainWindow.obj debug\moc_cpu.obj debug\moc_emulator.obj debug\moc_gui.obj
 	-$(DEL_FILE) debug\8080_Emulator.vc.pdb debug\8080_Emulator.ilk debug\8080_Emulator.idb
+	-$(DEL_FILE) debug\8080_Emulator_resource.res
 
 distclean: clean 
 	-$(DEL_FILE) .qmake.stash debug\8080_Emulator.pdb
@@ -278,18 +282,18 @@ compiler_no_pch_compiler_clean:
 compiler_rcc_make_all: debug\qrc_res.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) debug\qrc_res.cpp
-debug\qrc_res.cpp: ..\8080_Emulator\res.qrc \
+debug\qrc_res.cpp: ..\8080_Emulator\src\res.qrc \
 		..\..\Qt\5.15.2\msvc2015_64\bin\rcc.exe \
-		..\8080_Emulator\sounds\fastinvader3.wav \
-		..\8080_Emulator\sounds\invaderkilled.wav \
-		..\8080_Emulator\sounds\fastinvader2.wav \
-		..\8080_Emulator\sounds\fastinvader1.wav \
-		..\8080_Emulator\sounds\ufo_lowpitch.wav \
-		..\8080_Emulator\sounds\explosion.wav \
-		..\8080_Emulator\sounds\fastinvader4.wav \
-		..\8080_Emulator\sounds\shoot.wav \
-		..\8080_Emulator\sounds\ufo_highpitch.wav
-	C:\Qt\5.15.2\msvc2015_64\bin\rcc.exe -name res ..\8080_Emulator\res.qrc -o debug\qrc_res.cpp
+		..\8080_Emulator\src\sounds\fastinvader3.wav \
+		..\8080_Emulator\src\sounds\invaderkilled.wav \
+		..\8080_Emulator\src\sounds\fastinvader2.wav \
+		..\8080_Emulator\src\sounds\fastinvader1.wav \
+		..\8080_Emulator\src\sounds\ufo_lowpitch.wav \
+		..\8080_Emulator\src\sounds\explosion.wav \
+		..\8080_Emulator\src\sounds\fastinvader4.wav \
+		..\8080_Emulator\src\sounds\shoot.wav \
+		..\8080_Emulator\src\sounds\ufo_highpitch.wav
+	C:\Qt\5.15.2\msvc2015_64\bin\rcc.exe -name res ..\8080_Emulator\src\res.qrc -o debug\qrc_res.cpp
 
 compiler_moc_predefs_make_all: debug\moc_predefs.h
 compiler_moc_predefs_clean:
@@ -300,7 +304,7 @@ debug\moc_predefs.h: ..\..\Qt\5.15.2\msvc2015_64\mkspecs\features\data\dummy.cpp
 compiler_moc_header_make_all: debug\moc_instructionWindow.cpp debug\moc_mainWindow.cpp debug\moc_cpu.cpp debug\moc_emulator.cpp debug\moc_gui.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) debug\moc_instructionWindow.cpp debug\moc_mainWindow.cpp debug\moc_cpu.cpp debug\moc_emulator.cpp debug\moc_gui.cpp
-debug\moc_instructionWindow.cpp: ..\8080_Emulator\instructionWindow.h \
+debug\moc_instructionWindow.cpp: ..\8080_Emulator\src\instructionWindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QMainWindow \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmainwindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtwidgetsglobal.h \
@@ -409,9 +413,9 @@ debug\moc_instructionWindow.cpp: ..\8080_Emulator\instructionWindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qicon.h \
 		debug\moc_predefs.h \
 		..\..\Qt\5.15.2\msvc2015_64\bin\moc.exe
-	C:\Qt\5.15.2\msvc2015_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Emulator_Release/build-8080_Emulator-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/debug/moc_predefs.h -IC:/Qt/5.15.2/msvc2015_64/mkspecs/win32-msvc -IC:/Emulator_Release/8080_Emulator -IC:/Qt/5.15.2/msvc2015_64/include -IC:/Qt/5.15.2/msvc2015_64/include/QtMultimedia -IC:/Qt/5.15.2/msvc2015_64/include/QtWidgets -IC:/Qt/5.15.2/msvc2015_64/include/QtGui -IC:/Qt/5.15.2/msvc2015_64/include/QtANGLE -IC:/Qt/5.15.2/msvc2015_64/include/QtNetwork -IC:/Qt/5.15.2/msvc2015_64/include/QtCore -I. -I"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29910\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29910\include" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt" ..\8080_Emulator\instructionWindow.h -o debug\moc_instructionWindow.cpp
+	C:\Qt\5.15.2\msvc2015_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Emulator_Release/build-8080_Emulator-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/debug/moc_predefs.h -IC:/Qt/5.15.2/msvc2015_64/mkspecs/win32-msvc -IC:/Emulator_Release/8080_Emulator -IC:/Qt/5.15.2/msvc2015_64/include -IC:/Qt/5.15.2/msvc2015_64/include/QtMultimedia -IC:/Qt/5.15.2/msvc2015_64/include/QtWidgets -IC:/Qt/5.15.2/msvc2015_64/include/QtGui -IC:/Qt/5.15.2/msvc2015_64/include/QtANGLE -IC:/Qt/5.15.2/msvc2015_64/include/QtNetwork -IC:/Qt/5.15.2/msvc2015_64/include/QtCore -I. -I"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29910\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29910\include" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt" ..\8080_Emulator\src\instructionWindow.h -o debug\moc_instructionWindow.cpp
 
-debug\moc_mainWindow.cpp: ..\8080_Emulator\mainWindow.h \
+debug\moc_mainWindow.cpp: ..\8080_Emulator\src\mainWindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QMainWindow \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmainwindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtwidgetsglobal.h \
@@ -518,7 +522,7 @@ debug\moc_mainWindow.cpp: ..\8080_Emulator\mainWindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qtouchdevice.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtabwidget.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qicon.h \
-		..\8080_Emulator\instructionWindow.h \
+		..\8080_Emulator\src\instructionWindow.h \
 		..\8080_Emulator\src\gui\gui.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\QImage \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QLabel \
@@ -562,7 +566,7 @@ debug\moc_mainWindow.cpp: ..\8080_Emulator\mainWindow.h \
 		..\8080_Emulator\src\flags\flags.h \
 		debug\moc_predefs.h \
 		..\..\Qt\5.15.2\msvc2015_64\bin\moc.exe
-	C:\Qt\5.15.2\msvc2015_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Emulator_Release/build-8080_Emulator-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/debug/moc_predefs.h -IC:/Qt/5.15.2/msvc2015_64/mkspecs/win32-msvc -IC:/Emulator_Release/8080_Emulator -IC:/Qt/5.15.2/msvc2015_64/include -IC:/Qt/5.15.2/msvc2015_64/include/QtMultimedia -IC:/Qt/5.15.2/msvc2015_64/include/QtWidgets -IC:/Qt/5.15.2/msvc2015_64/include/QtGui -IC:/Qt/5.15.2/msvc2015_64/include/QtANGLE -IC:/Qt/5.15.2/msvc2015_64/include/QtNetwork -IC:/Qt/5.15.2/msvc2015_64/include/QtCore -I. -I"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29910\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29910\include" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt" ..\8080_Emulator\mainWindow.h -o debug\moc_mainWindow.cpp
+	C:\Qt\5.15.2\msvc2015_64\bin\moc.exe $(DEFINES) --compiler-flavor=msvc --include C:/Emulator_Release/build-8080_Emulator-Desktop_Qt_5_15_2_MSVC2015_64bit-Release/debug/moc_predefs.h -IC:/Qt/5.15.2/msvc2015_64/mkspecs/win32-msvc -IC:/Emulator_Release/8080_Emulator -IC:/Qt/5.15.2/msvc2015_64/include -IC:/Qt/5.15.2/msvc2015_64/include/QtMultimedia -IC:/Qt/5.15.2/msvc2015_64/include/QtWidgets -IC:/Qt/5.15.2/msvc2015_64/include/QtGui -IC:/Qt/5.15.2/msvc2015_64/include/QtANGLE -IC:/Qt/5.15.2/msvc2015_64/include/QtNetwork -IC:/Qt/5.15.2/msvc2015_64/include/QtCore -I. -I"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29910\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.28.29910\include" -I"C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8\include\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\cppwinrt" ..\8080_Emulator\src\mainWindow.h -o debug\moc_mainWindow.cpp
 
 debug\moc_cpu.cpp: ..\8080_Emulator\src\cpu\cpu.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\QObject \
@@ -913,13 +917,13 @@ compiler_moc_source_clean:
 compiler_uic_make_all: ui_instructionWindow.h ui_mainWindow.h
 compiler_uic_clean:
 	-$(DEL_FILE) ui_instructionWindow.h ui_mainWindow.h
-ui_instructionWindow.h: ..\8080_Emulator\instructionWindow.ui \
+ui_instructionWindow.h: ..\8080_Emulator\src\instructionWindow.ui \
 		..\..\Qt\5.15.2\msvc2015_64\bin\uic.exe
-	C:\Qt\5.15.2\msvc2015_64\bin\uic.exe ..\8080_Emulator\instructionWindow.ui -o ui_instructionWindow.h
+	C:\Qt\5.15.2\msvc2015_64\bin\uic.exe ..\8080_Emulator\src\instructionWindow.ui -o ui_instructionWindow.h
 
-ui_mainWindow.h: ..\8080_Emulator\mainWindow.ui \
+ui_mainWindow.h: ..\8080_Emulator\src\mainWindow.ui \
 		..\..\Qt\5.15.2\msvc2015_64\bin\uic.exe
-	C:\Qt\5.15.2\msvc2015_64\bin\uic.exe ..\8080_Emulator\mainWindow.ui -o ui_mainWindow.h
+	C:\Qt\5.15.2\msvc2015_64\bin\uic.exe ..\8080_Emulator\src\mainWindow.ui -o ui_mainWindow.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -933,7 +937,7 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 
 ####### Compile
 
-debug\instructionWindow.obj: ..\8080_Emulator\instructionWindow.cpp ..\8080_Emulator\instructionWindow.h \
+debug\instructionWindow.obj: ..\8080_Emulator\src\instructionWindow.cpp ..\8080_Emulator\src\instructionWindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QMainWindow \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmainwindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtwidgetsglobal.h \
@@ -1040,9 +1044,28 @@ debug\instructionWindow.obj: ..\8080_Emulator\instructionWindow.cpp ..\8080_Emul
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qtouchdevice.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtabwidget.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qicon.h \
-		ui_instructionWindow.h
+		ui_instructionWindow.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\QVariant \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QApplication \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qapplication.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\qcoreapplication.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\qeventloop.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qdesktopwidget.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qguiapplication.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qinputmethod.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QLabel \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qlabel.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qframe.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QMenuBar \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmenubar.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmenu.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qaction.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qactiongroup.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QStatusBar \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qstatusbar.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QWidget
 
-debug\main.obj: ..\8080_Emulator\main.cpp ..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QApplication \
+debug\main.obj: ..\8080_Emulator\src\main.cpp ..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QApplication \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qapplication.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtwidgetsglobal.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qtguiglobal.h \
@@ -1151,12 +1174,12 @@ debug\main.obj: ..\8080_Emulator\main.cpp ..\..\Qt\5.15.2\msvc2015_64\include\Qt
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qtouchdevice.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qguiapplication.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qinputmethod.h \
-		..\8080_Emulator\mainwindow.h \
+		..\8080_Emulator\src\mainwindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QMainWindow \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmainwindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtabwidget.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qicon.h \
-		..\8080_Emulator\instructionWindow.h \
+		..\8080_Emulator\src\instructionWindow.h \
 		..\8080_Emulator\src\gui\gui.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\QImage \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QLabel \
@@ -1199,7 +1222,7 @@ debug\main.obj: ..\8080_Emulator\main.cpp ..\..\Qt\5.15.2\msvc2015_64\include\Qt
 		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\QObject \
 		..\8080_Emulator\src\flags\flags.h
 
-debug\mainWindow.obj: ..\8080_Emulator\mainWindow.cpp ..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QApplication \
+debug\mainWindow.obj: ..\8080_Emulator\src\mainWindow.cpp ..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QApplication \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qapplication.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtwidgetsglobal.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qtguiglobal.h \
@@ -1308,12 +1331,12 @@ debug\mainWindow.obj: ..\8080_Emulator\mainWindow.cpp ..\..\Qt\5.15.2\msvc2015_6
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qtouchdevice.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qguiapplication.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qinputmethod.h \
-		..\8080_Emulator\mainwindow.h \
+		..\8080_Emulator\src\mainwindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QMainWindow \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmainwindow.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qtabwidget.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\qicon.h \
-		..\8080_Emulator\instructionWindow.h \
+		..\8080_Emulator\src\instructionWindow.h \
 		..\8080_Emulator\src\gui\gui.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtGui\QImage \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QLabel \
@@ -1354,7 +1377,18 @@ debug\mainWindow.obj: ..\8080_Emulator\mainWindow.cpp ..\..\Qt\5.15.2\msvc2015_6
 		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qsoundeffect.h \
 		..\8080_Emulator\src\cpu\cpu.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\QObject \
-		..\8080_Emulator\src\flags\flags.h
+		..\8080_Emulator\src\flags\flags.h \
+		ui_mainwindow.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QMenuBar \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmenubar.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qmenu.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qaction.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qactiongroup.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QPushButton \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qpushbutton.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qabstractbutton.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QStatusBar \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qstatusbar.h
 
 debug\cpu.obj: ..\8080_Emulator\src\cpu\cpu.cpp ..\8080_Emulator\src\cpu\cpu.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\QObject \
@@ -1505,6 +1539,10 @@ debug\emulator.obj: ..\8080_Emulator\src\emulator\emulator.cpp ..\..\Qt\5.15.2\m
 		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\QDebug \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\QTime \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\qdatetime.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\QSound \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qsound.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qtmultimediaglobal.h \
+		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qtmultimedia-config.h \
 		..\8080_Emulator\src\emulator\emulator.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\QWidget \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtWidgets\qwidget.h \
@@ -1529,8 +1567,6 @@ debug\emulator.obj: ..\8080_Emulator\src\emulator\emulator.cpp ..\..\Qt\5.15.2\m
 		..\..\Qt\5.15.2\msvc2015_64\include\QtCore\qelapsedtimer.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\QMediaPlayer \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qmediaplayer.h \
-		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qtmultimediaglobal.h \
-		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qtmultimedia-config.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qmediaobject.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qmultimedia.h \
 		..\..\Qt\5.15.2\msvc2015_64\include\QtMultimedia\qmediacontent.h \
