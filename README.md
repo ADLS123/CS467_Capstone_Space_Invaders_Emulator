@@ -15,3 +15,6 @@ Running Instructions:
     In order to compile the program download all of the files in the repo and place them in the same directory. 
     Navigate to the folder from a command line and type "make" without the paranthesis, the object files will be 
     generated as described in the makefile.
+    
+    
+Attributions: The application icon used is from Find Icons, at https://findicons.com/icon/133009/invader_1 A free icon database website.
