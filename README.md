@@ -15,3 +15,8 @@ Running Instructions:
     In order to compile the program download all of the files in the repo and place them in the same directory. 
     Navigate to the folder from a command line and type "make" without the paranthesis, the object files will be 
     generated as described in the makefile.
+    
+Attributions:
+    The application icon is taken from the Super Flat Remix v1.08 icon pack by Jeremiah found at
+    https://github.com/jeremiah/Super-Flat-Remix. The icon is under the Creative Commons 
+    ShareAlike license.
